@@ -1,0 +1,62 @@
+= Developers Guide
+
+== Prerequisites
+
+. Install git `sudo apt install git`
+. Install Serial `sudo apt-get install python3-serial`
+. Install sdl library for working on simulator `sudo apt-get install libsdl2-dev`
+. Install cmake
+. <<Install and Setup arduino-cli, Install and Setup arduino-cli>>
+. Install build essentials `sudo apt install build-essential`. It will install all necessary libraries, compilers, debuggers, etc.. required for C,C{pp} programming.
+
+=== For simulator
+
+. Install sdl library (sudo apt-get install libsdl2-dev)
+
+=== Install and Setup arduino-cli
+
+. Download arduino-cli from (https://downloads.arduino.cc/arduino-1.8.19-linux64.tar.xz) and extract the files.
+. Create a bin folder in home. Move the arduino-cli bin/exe into the created bin folder.
+. Check whether the home/bin is added to path with command (echo $PATH)
+. If not included, check the `.profile` file with `nano .profile` command. Add the `home/bin` path in the file. Then run the command `source .profile` to update the `.profile` file.
+
+=== To generate simulator executable file and Arduino binary files for NKD and Senscap device:
+
+. Clone the project into your local machine.
+. Run configuration command 
+    - For Simulator binaries
+        * `cmake -S. -Bbuild -DSIMULATOR=ON -DARDUINO=OFF -DSENSCAP=OFF -DSERIAL_PORT=/dev/ttyACM0` from inside the nkd folder.
+    - For NKD device binaries
+        * `cmake -S. -Bbuild -DSIMULATOR=OFF -DARDUINO=ON -DSENSCAP=OFF -DSERIAL_PORT=/dev/ttyACM0` from inside the nkd folder.
+    - For Senscap device binaries
+        * `cmake -S. -Bbuild -DSIMULATOR=OFF -DARDUINO=ON -DSENSCAP=ON -DSERIAL_PORT=/dev/ttyUSB0` from inside the nkd folder.
+. Change the Serial port accordingly.
+. After this command a build folder will be created inside nkd folder.
+. From inside build folder run `make` command. This will do the building depending on the configuration command.
+. simulator executable file will be created inside `nkd/build/simulator/` directory.
+. To run the executable run `./executable_name` from `nkd/build/simulator/` folder.
+. Arduino bin files are created inside `nkd/build/bin` with name prefix as vst-sentry(for NKD) and vst_senscap_display_(for Senscap)
+. To upload the firmware, run `make upload` from `nkd/build` directory.
+
+=== For the first time, when you start building the project
+
+* Follow steps 1 to 6 from the above process. In the step 6 you will encounter an error saying lv_conf.h file not found. To clear the error follow the below process.
+*Navigate into `~/.arduino15/internal/lvgl_9.1.0_204d275b5c9b30e0/lvgl/src` folder, open `lv_conf_internal.h` and edit the following lines
++
+----
+#elif defined(LV_CONF_INCLUDE_SIMPLE)         /*Or simply include lv_conf.h is enabled*/
+      #include "lv_conf.h"
+  #else
+      #include "../../lv_conf.h"            /*Else assume lv_conf.h is next to the lvgl folder*/
+  #endif
+----
++
+as shown below to avoid the error lv_conf.h file not found.
++
+----
+#elif defined(LV_CONF_INCLUDE_SIMPLE)         /*Or simply include lv_conf.h is enabled*/
+      #include "lv_conf.h"
+  #else
+      #include "lv_conf.h"                /*Else assume lv_conf.h is next to the lvgl folder*/
+  #endif
+----

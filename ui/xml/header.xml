@@ -1,0 +1,29 @@
+<component>
+	<api>
+		<prop name="left_icon" type="image" default="image_left_arrow_data" />
+		<prop name="title" type="string" default="Settings" />
+		<prop name="right_icon" type="image" default="image_exit" />
+	</api>
+
+	<styles>
+		<style
+			name="header"
+			bg_color="0xffffff"
+			border_color="0xd1d1d1"
+			border_opa="255"
+			width="480"
+			height="64"
+			border_width="1"
+			border_side="bottom"
+			radius="0"
+		/>
+	</styles>
+
+	<view>
+		<style name="header" />
+		<!-- <lv_obj height="content" width="content" image></lv_obj> -->
+		<lv_image src="$left_icon" align="left_mid" />
+		<lv_image src="$right_icon" align="right_mid" />
+		<lv_label text="$title" align="center" style_text_font="open_sans_bold_20" />
+	</view>
+</component>

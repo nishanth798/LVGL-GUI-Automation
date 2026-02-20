@@ -1,0 +1,187 @@
+= NKD UI Automation Tests (LVGL v9.4)
+:toc: left
+:toclevels: 3
+:icons: font
+:source-highlighter: highlightjs
+
+== Overview
+This document explains how to run headless automated tests for the NKD UI using LVGL’s internal test library (available from LVGL v9.4 onwards).
+
+== Prerequisites
+To successfully build and run these tests, the following are required:
+
+* *Access:* Access to the NKD UI code (screens, widgets, logic).
+* *Build Tools:* CMake – to configure and build everything.
+* *Knowledge:* Complete understanding of LVGL v9.4 documentation.
+* *Frameworks:* Basic understanding of the Unity test framework.
+* *Debugger:* GNU Debugger (GDB).
+
+=== OS and IDE
+* *Operating System:* Ubuntu 22.04 (or similar Linux).
+* *IDE:* Visual Studio Code (Recommended).
+
+=== System Packages Required
+[source,bash]
+----
+sudo apt install gcc g++ git gdb
+----
+[source,bash]
+----
+sudo apt update
+sudo apt install imagemagick
+----
+=== Libraries and Source Dependencies
+* NKD UI repository.
+* LVGL v9.4 source (fetched via CMake).
+* *ImageMagick:* Required for image annotation and error marking.
+
+== File Structure
+[vertical]
+....
+nkd/
+├── AutomatedTests/       
+│   ├── tests/              # Custom test files
+│   ├── CMakeLists.txt      # Build configuration for tests
+│   ├── lv_conf.h           # Configuration header
+│   ├── mark_err.sh         # Shell script for error marking
+│   ├── README.md           # Documentation for the test suite
+│   └── ref_imgs/           # Reference images for visual tests
+├── docs/                   
+├── simulator/              
+├── ui/                     
+├── CMakeLists.txt          
+└── README.md               
+....
+
+* *AutomatedTests:* Contains all headless test code and its own build configuration.
+* *ui:* Contains the NKD UI source used by both product and tests.
+* *simulator:* Reserved for manual UI debugging.
+
+== Configuration (lv_conf.h)
+The following parameters **must** be enabled in `AutomatedTests/lv_conf.h`:
+
+.Core Test Features
+* `LV_USE_TEST = 1`
+* `LV_USE_SNAPSHOT = 1`
+* `LV_USE_SCREENSHOT_COMPARE = 1`
+* `LV_USE_LODEPNG = 1`
+
+.Filesystem Support (Stdio)
+* `LV_USE_FS_STDIO = 1`
+* `LV_FS_STDIO_PATH = ""`
+* `LV_FS_STDIO_CACHE_SIZE = 512`
+
+.Logging & Fonts
+* *Optional:* `LV_USE_LOG = 1` (Level: `LV_LOG_LEVEL_INFO`).
+* *Fonts:* Enable all `LV_FONT_MONTSERRAT_*` fonts used by the UI.
+
+== Build & Execution
+=== CMake Build Concept
+One headless test executable is produced by linking:
+1. NKD UI (Static Library)
+2. LVGL Core
+3. LVGL Test Helpers + Unity
+
+=== Build Commands
+[source,bash]
+----
+# Run from AutomatedTests folder
+cmake -S . -B build 
+
+# Run from AutomatedTests/build folder
+cd build && make 
+----
+=== Execute Binary using Shell script
+[source,bash]
+----
+./mark_err.sh [VARIANT] [OPTIONAL_TEST_GRP] [OPTIONAL_TEST_NAME]
+----
+
+* `[VARIANT]`: Specifies the variant or version.
+* `[OPTIONAL_TEST_GRP]`: (Optional) Specifies the test group/category.
+* `[OPTIONAL_TEST_NAME]`: (Optional) Specifies the specific test name.
+
+Refer this link for all the test names: 
+link:https://slicktronix-my.sharepoint.com/my?id=%2Fpersonal%2Fnishanthg%5Fslicktronix%5Fcom%2FDocuments%2Ftestnames%2Etxt&parent=%2Fpersonal%2Fnishanthg%5Fslicktronix%5Fcom%2FDocuments[Test Names Document]
+
+== ImageMagick & Error Marking
+ImageMagick provides the `convert` command used by the wrapper script. 
+
+To generate a marked mismatch image (`*_marked.png`), the test binary must be executed through the wrapper script `mark_err.sh`.
+
+.Script Logic:
+. Extracts reference image path and mismatch coordinates (`x`, `y`) from the log.
+. Locates the generated `*_err.png` image.
+. Invokes ImageMagick to draw a circle at the failure point.
+
+.The `convert` Command:
+[source,bash]
+----
+convert "$in" -stroke red -strokewidth "$THICK" -fill none \
+  -draw "circle $x,$y $((x+RADIUS)),$y" "$out"
+----
+
+* `$in`: The error image (`*_err.png`).
+* `x, y`: Mismatch coordinates parsed from the log.
+* `$RADIUS`: Size of the marker.
+* `$out`: The generated output (`*_marked.png`).
+
+image::ref_imgsNKD/NKD-O/NKD_SET/IN-02-NKD_SET_002-Display_Settings.png[Display Settings]
+
+image::ref_imgsNKD/NKD-O/NKD_SET/IN-02-NKD_SET_002-Display_Settings_marked.png[Display Settings Marked]
+
+== Running Tests
+Navigate to the `build` folder and execute tests using the wrapper script.
+[source,bash]
+----
+./mark_err.sh [VARIANT] [OPTIONAL_TEST_GRP] [OPTIONAL_TEST_NAME]
+----
+
+* *Headless Mode:* Tests run without a physical display.
+* *Auto-generation:* Reference screenshots are created automatically if missing.
+* *Comparison:* On subsequent runs, rendered output is compared against the `ref_imgs/` directory.
+* *Failure Handling:* Mismatches result in a `FAIL` status and error image generation.
+
+== Sample Test Code
+[source,c]
+----
+static void test_activate_screen(void) {
+  const char *setv = "{\"jsonrpc\":\"2.0\",\"method\":\"set_variant\",\"params\":{\"variant\":1,"
+                     "\"fts_avail\":127},\"id\":1}\n";
+
+  write(WR_FD, setv, strlen(setv));
+  process_request(50);
+  
+  TEST_ASSERT_TRUE_MESSAGE(
+      lv_test_screenshot_compare("ref_imgsNKD/NKD-O/IN-01-Activate screen.png"),
+      "Screenshot comparison failed for IN-01-Activate screen");
+}
+----
+
+== Sample Output
+=== Successful Run
+[source,text]
+----
+./test
+Headless NKD UI:2144:test_welcome_screen:PASS
+Headless NKD UI:2145:test_activate_screen:PASS
+-----------------------
+3 Tests 0 Failures 0 Ignored 
+OK
+----
+
+=== Failure Run
+[source,text]
+----
+./test
+Headless NKD UI:27:test_activate_screen_btn_click:INFO: 
+Screenshot compare error
+  - File: ref_imgsNKD/NKD-O/IN-02-Alerts screen.png
+  - At x:97, y:227.
+-----------------------
+3 Tests 1 Failures 0 Ignored 
+FAIL
+----
+
+== Conclusion
+This setup allows UI behavior to be verified deterministically without a simulator. Visual regressions are identified early via automated comparison and ImageMagick annotation.

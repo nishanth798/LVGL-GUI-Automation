@@ -1,0 +1,23 @@
+list(
+  APPEND
+  PROJECT_SOURCES
+  ${CMAKE_CURRENT_LIST_DIR}/components/column_gen.c
+  ${CMAKE_CURRENT_LIST_DIR}/components/cont_schedule_time_gen.c
+  ${CMAKE_CURRENT_LIST_DIR}/components/header_gen.c
+  ${CMAKE_CURRENT_LIST_DIR}/components/row_gen.c
+  ${CMAKE_CURRENT_LIST_DIR}/components/save_button/save_button_gen.c
+  ${CMAKE_CURRENT_LIST_DIR}/components/time_setting_gen.c
+  ${CMAKE_CURRENT_LIST_DIR}/screens/screen_exit_schedule_gen.c
+  ${CMAKE_CURRENT_LIST_DIR}/screens/screen_set_time_gen.c
+  ${CMAKE_CURRENT_LIST_DIR}/exit_alert_schedule_gen.c
+  ${CMAKE_CURRENT_LIST_DIR}/exit_alert_schedule.c
+  ${CMAKE_CURRENT_LIST_DIR}/fonts/open_sans_bold_18_data.c
+  ${CMAKE_CURRENT_LIST_DIR}/fonts/open_sans_bold_20_data.c
+  ${CMAKE_CURRENT_LIST_DIR}/fonts/open_sans_bold_24_data.c
+  ${CMAKE_CURRENT_LIST_DIR}/fonts/open_sans_semibold_18_data.c
+  ${CMAKE_CURRENT_LIST_DIR}/fonts/open_sans_semibold_36_data.c
+  ${CMAKE_CURRENT_LIST_DIR}/fonts/open_sans_regular_18_data.c
+  ${CMAKE_CURRENT_LIST_DIR}/images/image_left_arrow_data.c
+  ${CMAKE_CURRENT_LIST_DIR}/images/image_close_data.c
+  ${CMAKE_CURRENT_LIST_DIR}/images/image_up_arrow_data.c
+  ${CMAKE_CURRENT_LIST_DIR}/images/image_down_arrow_data.c)

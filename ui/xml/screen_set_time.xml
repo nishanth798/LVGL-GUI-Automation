@@ -1,0 +1,10 @@
+<screen>
+	<view flex_flow="column">
+		<!-- create header-->
+		<header />
+		<!-- create card to set time -->
+		<cont_schedule_time ignore_layout="true" x="16" y="76" />
+		<!-- create save button -->
+		<save_button ignore_layout="true" align="bottom_mid" y="-16" />
+	</view>
+</screen>

@@ -1,0 +1,72 @@
+{
+    "folders":
+    [
+        {
+            "path": "."
+        }
+    ],
+    "build_systems":
+    [
+        {
+            "name": "Arduino",
+            "shell_cmd": "arduino-cli compile --quiet --output-dir build/ -e --optimize-for-debug --build-property \"compiler.cpp.extra_flags=-DLV_CONF_INCLUDE_SIMPLE=1 -I./include\" --build-property \"compiler.c.extra_flags=-DLV_CONF_INCLUDE_SIMPLE=1 -I./include\" ",
+            "working_dir": "$folder",
+            "quiet": true,
+            "variants": [
+        {
+            "name": "Build",
+            "shell_cmd": "arduino-cli compile --quiet --output-dir build/ -e --optimize-for-debug --build-property \"compiler.cpp.extra_flags=-DLV_CONF_INCLUDE_SIMPLE=1 -I./include\" --build-property \"compiler.c.extra_flags=-DLV_CONF_INCLUDE_SIMPLE=1 -I./include\" ",
+        },
+        {
+            "name": "Build Verbose",
+            "shell_cmd": "arduino-cli compile -v --output-dir build/ -e --optimize-for-debug --build-property \"compiler.cpp.extra_flags=-DLV_CONF_INCLUDE_SIMPLE=1 -I./include\" --build-property \"compiler.c.extra_flags=-DLV_CONF_INCLUDE_SIMPLE=1 -I./include\" ",
+        },
+        {
+            "name": "Upload",
+            "shell_cmd": "arduino-cli upload"
+        },
+        {
+            "name": "Build & Upload",
+            "shell_cmd": "arduino-cli compile --quiet --output-dir build/ -e --optimize-for-debug --build-property \"compiler.cpp.extra_flags=-DLV_CONF_INCLUDE_SIMPLE=1 -I./include\" --build-property \"compiler.c.extra_flags=-DLV_CONF_INCLUDE_SIMPLE=1 -I./include\"  -u ",
+        },
+        {
+            "name": "Clean Build",
+            "shell_cmd": "arduino-cli compile --quiet --clean --output-dir build/ -e --optimize-for-debug --build-property \"compiler.cpp.extra_flags=-DLV_CONF_INCLUDE_SIMPLE=1 -I./include\" --build-property \"compiler.c.extra_flags=-DLV_CONF_INCLUDE_SIMPLE=1 -I./include\" ",
+        },
+        {
+            "name": "Build with default warnings",
+            "shell_cmd": "arduino-cli compile --output-dir build/ -e --optimize-for-debug --warnings \"default\" --build-property \"compiler.cpp.extra_flags=-DLV_CONF_INCLUDE_SIMPLE=1 -I./include\" --build-property \"compiler.c.extra_flags=-DLV_CONF_INCLUDE_SIMPLE=1 -I./include\" ",
+        },
+
+        {
+            "name": "Build with more warnings",
+            "shell_cmd": "arduino-cli compile --output-dir build/ -e --optimize-for-debug --warnings \"more\" --build-property \"compiler.cpp.extra_flags=-DLV_CONF_INCLUDE_SIMPLE=1 -I./include\" --build-property \"compiler.c.extra_flags=-DLV_CONF_INCLUDE_SIMPLE=1 -I./include\" ",
+        },
+        {
+            "name": "Build with all warnings",
+            "shell_cmd": "arduino-cli compile --output-dir build/ -e --optimize-for-debug --warnings \"all\" --build-property \"compiler.cpp.extra_flags=-DLV_CONF_INCLUDE_SIMPLE=1 -I./include\" --build-property \"compiler.c.extra_flags=-DLV_CONF_INCLUDE_SIMPLE=1 -I./include\" ",
+        },
+
+        
+
+            
+    ]
+        },
+        {
+            "name": "Simulator",
+            "shell_cmd": "make",
+            "working_dir": "$folder/sim",
+            "variants": [
+        {
+            "name": "Build",
+            "shell_cmd": "make",
+        },
+        {
+            "name": "Clean",
+            "shell_cmd": "make clean",
+        },
+        
+    ]
+        }
+    ]
+}

@@ -1,0 +1,52 @@
+<screen permanent="true">
+	<styles>
+		<!-- style for exit alert scheddule container -->
+		<style name="style_alert_schedule" bg_color="0xffffff" border_color="0xD1D1D1" border_width="1" radius="7" />
+	</styles>
+
+	<!-- what ever we want to view on the screen -->
+	<view>
+		<!-- header object -->
+		<header />
+
+		<!--exit alert schedule container  -->
+		<lv_obj width="448" height="content" x="16" y="80" scrollable="false" flex_flow="column">
+			<style name="style_alert_schedule" />
+			<lv_label text="Exit Alert Schedule" style_text_font="open_sans_semibold_18" />
+			<!-- create dropdown -->
+			<lv_dropdown
+				name="dropdown"
+				width="415"
+				height="64"
+				y="36"
+				style_radius="10"
+				style_border_width="1"
+				style_border_color="0xD1D1D1"
+				style_text_font="open_sans_regular_18"
+				options="Continuous Monitoring&#10;Scheduled Monitoring"
+			>
+				<lv_dropdown-list>
+					<subject_toggle_event subject="selected_mon" />
+				</lv_dropdown-list>
+			</lv_dropdown>
+			<!-- create timer settings for scheduled monitoring -->
+			<lv_obj
+				name="timer"
+				align="center"
+				width="448"
+				height="content"
+				style_pad_all="0"
+				scrollable="false"
+				flex_flow="column"
+				style_border_width="0"
+			>
+				<lv_obj-bind_flag_if_eq subject="selected_mon" flag="hidden" ref_value="1" />
+				<time_setting />
+				<time_setting text="End Time" time="7:00 AM" />
+			</lv_obj>
+		</lv_obj>
+
+		<!-- Creating save button -->
+		<save_button align="bottom_mid" y="-16" />
+	</view>
+</screen>

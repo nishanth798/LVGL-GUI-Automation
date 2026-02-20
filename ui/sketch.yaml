@@ -1,0 +1,27 @@
+# This file contains the build profile for this project.
+# Read more at https://arduino.github.io/arduino-cli/0.34/sketch-project-file/
+#
+# To list all available board configuration options for esp32s3, run "arduino-cli board details -b esp32:esp32:esp32s3" in terminal.
+# Read more at https://arduino.github.io/arduino-cli/0.34/commands/arduino-cli_board_details/
+
+default_profile: esp32s3
+default_port: /dev/ttyACM0
+
+profiles:
+  esp32s3:
+    # For 2DA display
+    #  fqbn: esp32:esp32:esp32s3:PSRAM=opi,PartitionScheme=huge_app,FlashSize=16M,DebugLevel=none,JTAGAdapter=builtin
+    # For NKD display
+    fqbn: esp32:esp32:esp32s3:PSRAM=opi,FlashSize=16M,CDCOnBoot=cdc,JTAGAdapter=builtin,DebugLevel=none #,USBMode=default
+    platforms:
+      - platform: esp32:esp32 (2.0.14)
+        platform_index_url: https://espressif.github.io/arduino-esp32/package_esp32_index.json
+    libraries:
+      - lvgl (9.4.0)
+      - ArduinoJson (7.0.3)
+      - GFX Library for Arduino (1.5.6) #1.3.1
+      - TAMC_GT911 (1.0.2)
+      - Adafruit VEML7700 Library (2.1.5)
+      - Adafruit BusIO (1.14.3)
+      - IRremote (3.6.1)
+      - Anitracks_PCA95x5 (0.1.3)

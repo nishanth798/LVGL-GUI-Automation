@@ -1,0 +1,1926 @@
+:imagesdir: ../images
+
+
+= NKD : NUC Kinect Display
+
+The NKD is a touch display that enables user interaction with the `VST-ONE`. Users can provide inputs through touch and the corresponding feedback is visually displayed on the screen to confirm the changes. The display offers options to activate the system, control patient monitoring modes, adjust sensitivity, enable/disable aduio, adjust volume, select languages, pause the system, Deactive and shutdown the system. It also displays alerts for bed and chair exits, fall detected and reposition along with basic error notifications.
+
+The NUC and the Display communicate with each other via a serial protocol, utilizing JSON-RPC 2.0 as the communication protocol. The display updates accordingly, based on the commands received from the NUC.
+
+> Note: Display doesn't have any control on what to show, it only shows what is commanded by NUC. So it is very important that NUC sends the correct commands to display otherwise it may lead to inconsistent behavior.
+
+Check out <<7. References, display screens transition flow>> for more details on how the screens transition.
+
+## 1. Display Screen References
+
+=== Welcome Screen
+
+.Welcome Screen
+image::VSTLogo.svg[Welcome Screen,240,240]
+For all the variants upon power-on or bootup, this screen is shown.
+
+=== NKD-Read Only Screens
+
+This section provides the visual reference of some of the NKD-Read Only screen.
+
+.NKD-RO:Bed Monitoring Screen
+image::NKD_RO_BedMonitoring.svg[NKD-RO:Bed Monitor Screen,240,240]
+This screen is displayed when bed monitoring is active, showing the current monitoring status with selected bed mode sensitivity.
+
+.NKD-RO:Chair Monitoring Screen
+image::NKD_RO_ChairMonitoring.svg[NKD-RO:Chair Monitor Screen,240,240]
+This screen is displayed when chair monitoring is active, showing the current monitoring status.
+
+.NKD-RO:Scheduled Monitoring Screen
+image::NKD_RO_ScheduledMonitoring.svg[NKD-RO:Scheduled Monitor Screen,240,240]
+This screen is displayed when Scheduled monitoring is active.
+
+.NKD-RO:Bed Exit Screen
+image::NKD_RO_BedExit.svg[NKD-RO:Bed Exit Screen,240,240]
+This alert screen is shown when a bed exit event is detected, providing immediate visual alert.
+
+.NKD-RO:Chair Exit Screen
+image::NKD_RO_ChairExit.svg[NKD-RO:Chair Exit Screen,240,240]
+This alert screen is shown when a chair exit event is detected, providing immediate visual alert.
+
+.NKD-RO:Fall Detected Screen
+image::NKD_RO_FallDetected.svg[NKD-RO:Fall Detected Screen,240,240]
+This alert screen is shown when a fall detected event is occured, providing immediate visual alert.
+
+.NKD-RO:Reposition Screen
+image::NKD_RO_Reposition.svg[NKD-RO:Reposition Screen,240,240]
+This alert screen is shown when a reposition event is occured, providing immediate visual alert.
+
+.NKD-RO:Pause Timer Screen
+image::NKD_RO_PauseTimer.svg[NKD-RO:Pause Timer Screen,240,240]
+This timer screen is shown when a Short Pause or Long Pause event is occured, providing immediate visual alert.
+
+.NKD-RO:System Disconnected Screen
+image::NKD_RO_SysDisconnected.svg[NKD-RO:System Disconnected Screen,240,240]
+This screen is shown when there is no communication(set_state) between NUC and DISP for <<5.2. KEEP_ALIVE_TIMEOUT, keep alive timeout >> duration.
+
+'''
+
+=== NKD-Go Screens
+This section provides the visual reference of the NKD-Go screens majorly w.r.t <<4.2. Assign Room, Assign Room>>.
+
+=== NKD-Go Home Inactive
+
+.NKD-GO:Home Inactive
+image::NKD_GO_HomeInactive.svg[NKD-GO:Home Inactive Screen,240,240]
+For `NKD-Go` variant, this is the default screen shown when the system is not active but the variant is set. It displays the "Activate System" button along with "Shut Down" option.
+
+=== NKD-Go Assign Room to Sensor
+
+.NKD-GO: Assign Room to Sensor
+image::NKD_GO_AssignRoom.svg[NKD-GO: Assign Room to the Sensor Screen,240,240]
+
+=== NKD-Go Confirm Room Assignment
+
+.NKD-GO: Confirm Room Assignment
+image::NKD_GO_ConfirmRoom.svg[NKD-Go: Confirm Room Assignment Screen,240,240]
+
+=== NKD-Go Unit Selection
+
+.NKD-GO: Unit Selection
+image::NKD_GO_UnitSelection.svg[NKD-Go: Unit Selection Screen,240,240]
+
+=== NKD-Go Room Selection
+
+.NKD-GO: Room Selection
+image::NKD_GO_RoomSelection.svg[NKD-Go: Room Selection Screen,240,240]
+
+=== NKD-Go Room Assigning
+
+.NKD-GO: Room AssigningPopup Message
+image::NKD_GO_RoomAssigning.svg[NKD-GO: Room Assigning Screen,240,240]
+
+=== NKD-Go Room Assigned Successfully
+
+.NKD-GO: Room Assigned Successfully Popup Message
+image::NKD_GO_RoomAssignSuccess.svg[NKD-GO: Room Assigned Successfully Screen,240,240]
+
+=== NKD-Go Room Assignment Failed
+
+.NKD-GO: Room Assignment Failed Popup Message
+image::NKD_GO_RoomAssignFailed.svg[NKD-GO: Room Assignment Failed Screen,240,240]
+
+=== NKD-Go Room Already Assigned
+
+.NKD-GO: Room Already Assigned Popup Message
+image::NKD_GO_RoomAlreadyAssigned.svg[NKD-GO: Room Already Assigned Screen,240,240]
+
+=== NKD-Go Settings Home
+.NKD-GO:Settings Home
+image::NKD_GO_SettingsHome.svg[Settings Home Screen,240,240]
+The Settings Home screen provides options to configure various system settings and also an option to deactivate the system and Shutdown the system.
+
+=== NKD-Go Shutdown Popup
+.NKD-GO:Shutdown Popup
+image::NKD_GO_ShutdownPopup.svg[Shutdown Popup Screen,240,240]
+The popup appears when the *Shutdown* button is clicked. It provides options either to cancel the process or to proceed by sending a shutdown request.
+
+
+=== NKD-Go Bed Monitoring
+.NKD-GO:Bed Monitoring
+image::NKD_GO_BedMonitoring.svg[Bed Monitoring Screen,240,240]
+This screen is displayed when bed monitoring is active, showing the current monitoring status with selected bed mode sensitivity and other options like `Bed Mode`, `Chair Mode`, `Short Pause`, `Long Pause`, `Settings icon` and assigned room number.
+
+
+> Note: *All other screens are identical to the NKD-O variant. The only difference in the NKD-GO variant is that the selected room number is additionally displayed on the Home Active screen.*
+
+
+'''
+
+=== NKD-O Screens
+
+This section provides the visual reference of the NKD-O variant screens.
+
+=== NKD-O Home Inactive
+.NKD-O:Home Inactive
+image::NKD_O_HomeInactive.svg[Home Inactive Screen,240,240]
+For `NKD-O` variant, this is the default screen shown when the system is not active but the variant is set. It displays the "Activate System" button.
+
+=== NKD-O Bed Monitoring
+.NKD-O:Bed Monitoring
+image::NKD_O_BedMonitoring.svg[Bed Monitoring Screen,240,240]
+This screen is displayed when bed monitoring is active, showing the current monitoring status with selected bed mode sensitivity and other options like `Bed Mode`, `Chair Mode`, `Short Pause`, `Long Pause` and `Settings icon`.
+
+=== NKD-O Chair Monitoring
+.NKD-O:Chair Monitoring
+image::NKD_O_ChairMonitoring.svg[Chair Monitoring Screen,240,240]
+This screen appears when chair monitoring is active, displaying the current monitoring status and other options like `Bed Mode`, `Chair Mode`, `Short Pause`, `Long Pause` and `Settings icon`.
+
+=== NKD-O Scheduled Monitoring
+.NKD-O:Scheduled Monitoring
+image::NKD_O_ScheduledMonitoring.svg[Scheduled Monitoring Screen,240,240]
+This screen is shown when scheduled monitoring is configured.
+
+=== NKD-O Fall Monitoring Screen when Bed/Chair Alert Disabled
+.NKD-O:Fall Monitoring Screen when Bed/Chair Alert Disabled
+image::NKD_O_FallMonBedAltDisabled.svg[Fall Monitoring Screen when Bed/Chair Alert Disabled,240,240]
+This screen appears when Fall alert is enabled and Bed/Chair alert is disabled by the user, displaying the current monitoring status and other options like `Resume Fall Monitoring` (disabled) and `Settings icon`.
+
+=== NKD-O Pressure Injury Monitoring Screen when Bed/Chair Alert Disabled 
+.NKD-O:Pressure Injury Monitoring Screen when Bed/Chair Alert Disabled 
+image::NKD_O_PressureInjBedAltDisabled.svg[Pressure Injury Monitoring Screen when Bed/Chair Alert Disabled,240,240]
+This screen appears when Reposition alert is enabled and Bed/Chair alert is disabled by the user, displaying the current monitoring status and other options like `Clear Alert` (disabled) and `Settings icon`.
+
+
+=== NKD-O Pressure Injury Timer
+.NKD-O:Pressure Injury Timer
+image::NKD_O_PressureInjuryTimer.svg[Pressure Injur Timer Screen,240,240]
+This Pressure injury timer is shown along with the status title when Reposition Alerts are Enabled. This timer is shown across all home active screens.
+
+=== NKD-O Bed Exit
+.NKD-O:Bed Exit
+image::NKD_O_BedExit.svg[Bed Exit Screen,240,240]
+This alert screen is shown when a bed exit event is detected, providing immediate visual alert.
+
+=== NKD-O Chair Exit
+.NKD-O:Chair Exit
+image::NKD_O_ChairExit.svg[Chair Exit Screen,240,240]
+This alert screen is shown when a chair exit event is detected, providing immediate visual alert.
+
+=== NKD-O Fall Detected Screen when Bed/Chair Alert Disabled
+.NKD-O:Fall Detected Screen when Bed/Chair Alert Disabled
+image::NKD_O_FallDetectedBedAlertDisabled.svg[Fall Detected Screen when Bed/Chair Alert Disabled,240,240]
+This alert screen is shown when a Fall event is detected w.r.t Bed/Chair Alert is disabled, providing immediate visual alert.
+
+=== NKD-O Fall Detected Screen when Bed/Chair Alert Enabled
+.NKD-O:Fall Detected Screen when Bed/Chair Alert Enabled
+image::NKD_O_FallDetectedBedAlertEnabled.svg[Fall Detected Screen when Bed/Chair Alert Enabled,240,240]
+This alert screen is shown when a Fall event is detected w.r.t Bed/Chair Alert is enabled, providing immediate visual alert.
+
+=== NKD-O Reposition Screen when Bed/Chair Alert Disabled
+.NKD-O:Reposition Screen when Bed/Chair Alert Disabled
+image::NKD_O_RepositionBedAlertDisabled.svg[Reposition Screen when Bed/Chair Alert Disabled,240,240]
+This alert screen is shown when a Reposition event is detected w.r.t Bed/Chair Alert is disabled, providing immediate visual alert.
+
+=== NKD-O Reposition Screen when Bed/Chair Alert Enabled
+.NKD-O:Reposition Screen when Bed/Chair Alert Enabled
+image::NKD_O_RepositionBedAlertEnabled.svg[Reposition Screen when Bed/Chair Alert Enabled,240,240]
+This alert screen is shown when a Reposition event is detected w.r.t Bed/Chair Alert is enabled, providing immediate visual alert.
+
+=== NKD-O Pause Sensor
+.NKD-O:Pause Sensor
+image::NKD_O_PauseSensor.svg[Pause Sensor Screen,240,240]
+This screen is displayed when monitoring is temporarily paused using short pause or long pause, showing the remaining pause duration.
+
+=== NKD-O Calibrating
+.NKD-O:Calibrating
+image::NKD_O_Calibrating.svg[Calibrating Screen,240,240]
+This screen is displayed when Sensor is being calibrating.
+
+=== NKD-O Calibrating Chair
+.NKD-O:Calibrating Chair
+image::NKD_O_CalibratingChair.svg[Calibrating Chair Screen,240,240]
+This screen is displayed when Sensor is being calibrating w.r.t chair monitoring.
+
+=== NKD-O System Disconnected
+.NKD-O:System Disconnected
+image::NKD_O_SysDisconnected.svg[System Disconnected Screen,240,240]
+This screen is shown when there is no communication(set_state) between NUC and DISP for <<5.2. KEEP_ALIVE_TIMEOUT, keep alive timeout >> duration.
+
+=== NKD-O Settings Home
+.NKD-O:Settings Home
+image::NKD_O_SettingsHome.svg[Settings Home Screen,240,240]
+The Settings Home screen provides options to configure various system settings and also an option to deactivate the sensor.
+
+'''
+=== Common Screens across NKD-O and NKD-Go
+Following are the visual reference of the some of the screens available in the NKD system that are common in both NKD-O and NKD-Go variants.
+
+=== Home Inactive Alerts Settings
+.Home Inactive Alerts Settings
+image::HomeInactiveAlertsSettings.svg[Home Inactive Alerts Settings Screen,240,240]
+The Alerts settings screen allows configuration of alerts (Bed/Chair Exit, Fall and Reposition) and provides with options to go to next or previous screens.
+
+=== Home Inactive Exit Alert Schedule Settings
+.Home Inactive Exit Alert Schedule Settings
+image::HomeInactiveSchMonSettings.svg[Home Inactive Scheduled Monitoring Settings Screen,240,240]
+The Scheduled Monitoring settings screen allows configuration of Scheduled / Continuous Monitoring and an option to go to next or previous screens.
+
+=== Home Inactive Bed Mode Sensitivity Settings
+.Home Inactive BMS Settings
+image::HomeInactiveBMSSettings.svg[Home Inactive BMS Settings Screen,240,240]
+The BMS (Bed Mode Sensitivity) settings screen allows configuration of bed monitoring sensitivity and an option to go to next or previous screens.
+
+=== Home Inactive Bed Width Settings
+.Home Inactive Bed Width Settings
+image::HomeInactiveBedWidthSettings.svg[Home Inactive Bed Width Settings Screen,240,240]
+The Bed Width settings screen allows configuration of bed width and an option to go to next or previous screens.
+
+=== Home Inactive Bed Position / Placement Settings
+.Home Inactive Bed Position Settings
+image::HomeInactiveBedPosSettings.svg[Home Inactive Bed Position Settings Screen,240,240]
+The Bed Placement / Position settings screen allows configuration of bed placement / position and an option to go to next or previous screens.
+
+=== Home Inactive Occupant Size Settings
+.Home Inactive Occupant Size Settings
+image::HomeInactiveOccSizeSettings.svg[Home Inactive Occupant Size Settings Screen,240,240]
+The Occupant Size settings screen allows configuration of occupant size and an option to go to next or previous screens.
+
+=== Home Inactive In-Room Alert Audio Settings
+.Home Inactive In-Room Alert Audio Settings
+image::HomeInactiveAudioSettings.svg[Home Inactive In-Room Alert Audio Settings Screen,240,240]
+This screen provides options to configure audio settings for notifications, alerts and errors and an option to go to previous screen and an option to `Activate` the sensor.
+
+=== Language Selection
+.Language Selection
+image::LanguageSelection.svg[Language Selection Screen,240,240]
+This screen provides options to select a language from the available options.
+
+=== System Information
+.System Information
+image::SystemInfo.svg[System Information Screen,240,240]
+This screen shows the information like Compute ID, Software Version running in the master device(NUC) and Firmware version of the display.
+
+=== Home Active Alerts Settings
+.Home Active Alerts Settings
+image::HomeActiveAlertsSettings.svg[Home Active Alerts Screen,240,240]
+The Alerts settings screen allows configuration of alerts (Bed/Chair Exit, Fall and Reposition)
+
+=== Home Active Exit Alert Schedule Settings
+.Home Active Exit Alert Schedule Settings
+image::HomeActiveSchMonSettings.svg[Home Active Scheduled Monitoring Settings Screen,240,240]
+The Scheduled Monitoring settings screen allows configuration of Scheduled / Continuous Monitoring.
+
+=== Home Active Bed Mode Sensitivity Settings
+.Home Active BMS Settings
+image::HomeActiveBMSSettings.svg[Home Active BMS Settings Screen,240,240]
+The BMS (Bed Mode Sensitivity) settings screen allows configuration of bed monitoring sensitivity.
+
+=== Home Active Bed Width Settings
+.Home Active Bed Width Settings
+image::HomeActiveBedWidthSettings.svg[Home Active Bed Width Settings Screen,240,240]
+The Bed Width settings screen allows configuration of bed width.
+
+=== Home Active Bed Position Settings
+.Home Active Bed Position Settings
+image::HomeActiveBedPosSettings.svg[Home Active Bed Position Settings Screen,240,240]
+The Bed Placement / Position settings screen allows configuration of bed placement / position.
+
+=== Home Active Occupant Size Settings
+.Home Active Occupant Size Settings
+image::HomeActiveOccSizeSettings.svg[Home Active Occupant Size Settings Screen,240,240]
+The Occupant Size settings screen allows configuration of occupant size.
+
+=== Home Active In-Room Alert Audio Settings
+.Home Active In-Room Alert Audio Settings
+image::HomeActiveAudioSettings.svg[Home Active In-Room Alert Audio Settings Screen,240,240]
+This screen provides options to configure audio settings for notifications, alerts and errors.
+
+=== Display Settings
+.Display Settings
+image::DisplaySettings.svg[Display Settings Screen,240,240]
+This screen provides options to configure display settings like brightness and automatic brightness control (abc).
+
+=== Home Active Settings Save Popup
+.Home Active Settings Save Popup
+image::HomeActiveSettingsSavePopup.svg[Home Active Settings Save Popup Screen,240,240]
+This popup is shown when the settings saved successfully.
+
+=== Deactivating
+.Deactivating 
+image::Deactivating.svg[Deactivating Screen,240,240]
+This screen is displayed when sensor deactivation is in progress. This screen is common for all 3 variants.
+
+=== Activating
+.Activating 
+image::Activating.svg[Activating Screen,240,240]
+This screen is displayed when sensor activation is in progress. This screen is common for all 3 variants.
+
+'''
+
+== 2. Display Variants
+
+There are three different variants of the NKD, all utilizing the same hardware and firmware. The variant is determined by configuring it through <<4.1. set_variant,set_variant>> command . The three variants are:
+
+. NKD-O (NKD-Interactive)
+. NKD-GO
+. NKD-Read only
+
+For all the variants upon power-on or bootup, the <<Welcome Screen, Welcome>> screen is displayed.
+
+=== 2.1. NKD-O
+
+*Setup:* The VST-One along with display is fixed in one room and remains stationary. It is mounted at a height where users can easily interact with it.
+
+*Software:*
+
+* Upon power-on, once the variant is set to NKD-O, the <<NKD-O Home Inactive, NKD-O Home Inactive>> screen is shown.
+* When the `Activate System` button present on the screen is clicked, the <<Home Inactive Alerts Settings,Home Inactive Alerts Settings>> screen is shown.
+* No room selection is required since the device is fixed in one room.
+
+'''
+
+=== 2.2. NKD-GO
+
+*Setup:* The VST-One along with display is mounted on a stand and can be moved between rooms as needed.
+
+*UI:* Contains `Shut Down` button in `Activate System` and `Settings Home` screens.
+
+*Software:*
+
+* Upon power-on, once the variant is set to NKD-Go, the <<NKD-Go Home Inactive, NKD-Go Home Inactive>> screen is shown.
+* A room number needs to be assigned to the sensor. Please refer to <<4.2. Assign Room, Assign Room>> for details.
+* After assigning the room number, the <<Home Inactive Alerts Settings,Home Inactive Alerts Settings>> screen is shown.
+* Assigning room number is part of the device initialization process.
+
+NOTE: Since the introduction of the `Shutdown` button, both `Shutdown` and `Deactivate` requests now accept either the `Welcome/Shutdown` or `Deactivate` screens as valid responses. Previously, the `Deactivate` request only accepted the `Deactivate` screen.
+
+NOTE: Typically, we prevent screen changes while a user request is in progress — for example, when on the `Settings` screen. However, we make an exception for the `Shutdown` button on the `Activate System` page. If the user clicks `Shutdown` and leaves the confirmation popup open, we allow screen changes. This behavior was implemented for simplicity, but can be revised if needed.
+
+'''
+
+=== 2.3. NKD - Read Only
+
+*Setup:* The VST-One along with display is fixed in one room on the ceiling, and the display is also mounted in a fixed position. Since the user cannot directly interact with it, it is referred to as the "Read Only" variant.
+
+*Software:*
+
+* Upon power-on, though the variant is set to NKD-Read Only, the display shows the same <<Welcome Screen, Welcome>> screen.
+* Based on commands from the NUC, the display will update the screens.
+* All buttons are removed from the UI, as there is no user interaction in this variant. Checkout <<NKD-Read Only Screens, NKD-Read Only Screens>> for reference.
+* <<5.3.1. Sleep Mode,Sleep Mode>> and <<5.3. INACTIVE_TIMEOUT,Inactive Timeout>> features are disabled in read only variant.
+
+
+== 3. NKD JSON RPC Methods
+
+VSTOne Display accepts requests over a <<serial-interface-settings,serial port>> using the https://www.simple-is-better.org/json-rpc/jsonrpc20.html[JSON-RPC 2.0] specification.
+
+[discrete]
+=== 3.1. Serial interface settings
+
+* 115200 bps
+* 1 stop bit
+* None parity
+* Line Mode
+* **Line Termination: LF(`\n`)**
+
+[discrete]
+=== 3.2. Serial port terminal apps
+
+There are many graphical applications to connect to a serial port, some of the popular ones are mentioned in https://learn.sparkfun.com/tutorials/terminal-basics/all[this article]
+
+https://freeware.the-meiers.org/[CoolTerm] is a decent cross platform graphical terminal app.
+
+Serial port can also be accessed using terminal commands as well as programatically.
+
+[discrete]
+=== 3.3. Request Formatting
+
+To make a JSON-RPC request, send a request as follows, terminated by a **newline(`\n`)**. The JSON request data should contain 4 fields:
+
+* `jsonrpc: <string>` - set to `"2.0"`
+* `id: <number>` - a unique client-generated identifying integer
+* `method: <string>` - a string containing the method to be invoked
+* `params: <array>` - a JSON array of ordered parameter values
+
+Example request from NUC to Display
+[,json]
+----
+{
+  "jsonrpc": "2.0",
+  "method": "set_state",
+  "params": {
+    "screen": 2,
+    "bms": 3,
+    "vol": 3,
+    "lang": "English",
+    "audio": 1,
+    "mode": 2,
+    "alert": 1
+  },
+  "id": 2
+}
+----
+
+Above JSON request is prettified for clarity, is minified in actual use.
+
+=== 3.4. Response Formatting
+The response output will be a JSON object with the following fields:
+
+* `jsonrpc: <string>` - matching the request specification
+* `id: <number>` - matching the request identifier
+* `result: <array|number|object|string>` - requested data or success confirmation
+* `error: <object>` - error object with `code` and `message` fields in case of failure
+
+Example success response from Display to NUC
+
+[,json]
+----
+{"jsonrpc":"2.0","result":null,"id":2}
+----
+
+Example failure response from Display to NUC
+[,json]
+----
+{"jsonrpc": "2.0", "error": {"code": -32001, "message": "appropriate message"}, "id": xx}
+----
+
+> Note: A request without an `id` field will be considered as *notification* and no response is to be expected from the other side.
+
+== 4. API Reference
+
+In this communication, a set of `methods` are exchanged between `NUC -> DISP` and `DISP -> NUC`.
+The methods involved are as follows:
+
+
+`DISP -> NUC`
+
+* `get_room`
+* `get_units`
+* `get_rooms`
+* `set_room`
+* `activate_sensor`
+* `save_bms` 
+* `save_audio`
+* `save_display`
+* `save_occ_size`
+* `save_bed_wid`
+* `save_bed_pos`
+* `get_languages`
+* `save_mon_sch`
+* `save_alerts`
+* `get_sys_info`
+* `activate_bed_mode`
+* `activate_chair_mode`
+* `pause_sensor`
+* `clear_alert`
+* `resume_fall_mon`
+* `ir_recv_event`
+* `system_event`
+* `deactivate_sensor`
+* `shutdown`
+
+
+
+`NUC -> DISP`
+
+* `set_variant`
+* `set_state`
+* `enable_watchdog`
+* `set_disp`
+* `set_toast`
+* `get_device_info`
+* `get_device_status`
+* `restart_nkd`
+* `restart_display`
+
+=== 4.1. set_variant
+
+`NUC -> DISP`
+
+- This is the initial command that the display expects to receive from the NUC.
+- It is used to configure the display for different firmware variants as follows:
+
+[,json]
+----
+{"jsonrpc": "2.0", "method": "set_variant", "params": {"variant":1, "fts_avail":127}, "id": 1}
+----
+
+|===
+| variant | value
+
+| NKD-O | 1
+
+| NKD-GO | 2
+
+| NKD-RO | 3
+|===
+
+`fts_avail`
+
+|===
+|Parameter | Bit
+
+|Bed/chair exit alert | 0
+|Fall alert | 1
+|Reposition/Pressure Injury alert | 2
+|Scheduled Monitoring | 3
+|Bed Placement | 4
+|Bed Width | 5
+|Occupant Size | 6
+|===
+
+- Both `variant` and `fts_avail` are mandatory parameters.  
+- The `variant` field specifies which firmware variant behavior should be activated.  
+- The `fts_avail` field indicates which features are enabled in the cloud. This determines which fields are visible or hidden in the UI workflow.  
+** This field is transmitted as a *decimal value* (instead of hexadecimal), since JSON-RPC does not support hexadecimal values.  
+- Within `fts_avail`, *bit 0* (corresponding to `Bed/Chair Exit Alerts`) must always be set to `1`.  
+** This requirement comes from the VST team, which mandates that `Bed/Chair Exit Alerts` are always enabled in the cloud.
+
+
+- See <<2. Display Variants,Display Variants>> for more details about different NKD variants.  
+- Upon boot, the default screen shown is the <<Welcome Screen, Welcome>> screen.  
+- During this phase, if the firmware variant is not set, the display **accepts all commands except** <<4.29. set_state,set_state>> and <<4.2. Assign Room, Assign Room>>.  
+- If a <<4.29. set_state,set_state>> command is received **without a variant being set**, the response will be an **error** with the message: `"Variant not set"`.
+
+- If a `set_variant` command is received after the sensor has already been activated:  
+  * For **variant 1 (NKD-O):** the <<NKD-O Home Inactive, NKD-O Home Inactive>> screen is displayed, regardless of the current screen.  
+  * For **variant 2 (NKD-GO):** the <<NKD-Go Home Inactive, NKD-Go Home Inactive>> screen is displayed, regardless of the current screen.  
+  * For **variant 3 (NKD-RO):** the <<Welcome Screen, Welcome>> screen is displayed, regardless of the current screen.
+  From this point onward, the <<4.29. set_state,set_state>> command is **accepted** and processed.  
+
+- Sleep mode is disabled in the **read-only** variant.  
+- The inactive timeout feature is also disabled in the **read-only** variant (i.e., it will not return to the nearest home screen after inactivity).
+
+Response : `DISP -> NUC`
+
+* On success, the display responds with a JSON response where the `result` field is set to `null` and the `id` matches the request.
+[,json]
+----
+{"jsonrpc":"2.0", "result": null, "id":1}
+----
+
+* On failure, respective error is sent to NUC with the `id` matching the request.
+[,json]
+----
+{"jsonrpc": "2.0", "error": {"code": -32001(appropriate code), "message": "appropriate message"}, "id": 1}
+----
+'''
+
+=== 4.2. Assign Room
+
+NOTE: This *Assign Room* section is only applicable to the NKD-Go variant. It is not available or valid for the NKD-O and NKD-ReadOnly variants.
+
+* During the activation process, the display sends requests with the following methods:  
+  ** `get_room`  
+  ** `get_units`  
+  ** `get_rooms`  
+  ** `set_room`  
+
+* Each request from the display is sent with a unique ID, and the NUC must respond back with the same ID.
+
+> Note: In responses from `NUC -> DISP`, the `result` field is either set to `null` or contains the requested data in *string* format for successful cases.  
+For failure cases, the `error` field is set.  
+The requested data in the response must always be of type *String*; any other data type will not be considered valid.  
+
+
+*4.2.1. get_room*
+
+Request: `DISP -> NUC`
+
+Params: `No Params`
+
+* Request issued when `Activate System` button is selected in <<NKD-Go Home Inactive, NKD-Go Home Inactive>> screen, inorder to get the assigned room number, if the sensor is already assigned with a room.
++
+
+[,json]
+----
+{"jsonrpc": "2.0", "method": "get_room", "id":3}
+----
+
+Response : `NUC -> DISP`
+
+* If room is already assigned, `result` value is `assigned room number` in a string format with max of 10 characters, and the display shows <<NKD-Go Confirm Room Assignment, NKD-Go Confirm Room Assignment>> screen.
++
+
+[,json]
+----
+{"jsonrpc":"2.0", "result": "101-a", "id":3}
+----
+
+* If room is not assigned, `result` value is `null`, and the display shows <<NKD-Go Assign Room to Sensor, NKD-Go Assign Room to Sensor>> screen.
+
+
+[,json]
+----
+{"jsonrpc":"2.0", "result": null, "id":3}
+----
+
+*4.2.2. get_units*
+
+Request: `DISP -> NUC`
+
+Params: `No Params`
+
+* Request issued when `View Rooms` is selected in <<NKD-Go Assign Room to Sensor, NKD-Go Assign Room to Sensor>> screen or when `Change Room` is selected in <<NKD-Go Confirm Room Assignment, NKD-Go Confirm Room Assignment>> screen, inorder to get `list of units` from NUC.
++
+
+[,json]
+----
+{"jsonrpc": "2.0", "method": "get_units", "id":4}
+----
+
+Response: `NUC -> DISP`
+
+* `result` value is `list of units in array` with each unit as `string`
+* If the units are not available, then the `result` value is empty array and display shows the currently existing screen.
+* If a valid list of units is received in the response, then <<NKD-Go Unit Selection, NKD-Go Unit Selection>> screen is shown with the received units.
+* Maximum of 100 unit numbers with each unit number length of max 10 characters is accepted
+
+
+[,json]
+----
+{"jsonrpc":"2.0", "result":["1","2","3","4","5","6","7","8","9","10","11","12","13","14","15","16","17","18","19","20","21","22","23","24","25","26"], "id":4}
+----
+
+*4.2.3. get_rooms*
+
+Request: `DISP -> NUC`
+
+Params: Parameters include, `unit` with the value as `selected unit` in `string` format.
+
+* Request issued when user selects `Next` button, after selecting a `unit` in the <<NKD-Go Unit Selection, NKD-Go Unit Selection>> screen inorder to get `list of rooms` w.r.t selected unit.
+
+[,json]
+----
+{"jsonrpc": "2.0", "method": "get_rooms", "params":{"unit": "1"},"id":5}
+----
+
+Response: `NUC -> DISP`
+
+* `result` value is `list of rooms in array` with each room number as `string`
+* If the rooms are not available, the `result` value is empty array and the display shows the currently existing screen.
+* If a valid lsit of rooms is received in the response, then <<NKD-Go Room Selection, NKD-Go Room Selection>> screen is shown with the received rooms.
+* Maximum of 100 room numbers with each room number length of max 10 characters is accepted
+
+
+[,json]
+----
+{"jsonrpc":"2.0", "result": ["101-a","102-a","103-a","104-a","105-a","106-a"], "id":5}
+----
+
+*4.2.4. set_room with parameter, `sensor value` as null*
+
+Request: `DISP -> NUC`
+
+Params: Parameters include, `room` with the value as `selected room` in `string` format and `sensor` with the value as `null`
+
+* Request issued when user selects `Next` button, after selecting a `room` in the <<NKD-Go Room Selection, NKD-Go Room Selection>> screen, inorder to set or assign the selected room to the sensor.
+* When the value of the parameter `sensor` is null, then we are indicating to NUC like, check if the selected room is already assigned or not and if not assigned to any other sensor, then assign the selected room to this particular sensor.
+* During this process, <<NKD-Go Room Assigning, NKD-Go Room Assigning>> popup message is shown in the display. This popup will be closed once the response is received from NUC or after `120 seconds` of timeout, whichever is earlier.
+
+[,json]
+----
+{"jsonrpc": "2.0", "method": "set_room", "params":{"room": "104-a", "sensor": null},"id":6}
+----
+
+Response: `NUC -> DISP`
+
+* If room assignment is success, then `result` value is `null` and display shows <<NKD-Go Room Assigned Successfully, NKD-Go Room Assigned Successfully>> pop up message.
+
+
+[,json]
+----
+{"jsonrpc":"2.0", "result": null, "id":6}
+----
+
+* If room assignment is failure, then it is `error` with `code` value as `appropriate error code` in integer and `message` as `error message` in string and display shows <<NKD-Go Room Assignment Failed, NKD-Go Room Assignment Failed>> pop up message.
+
+
+[,json]
+----
+{"jsonrpc": "2.0", "error": {"code": -32001, "message": "appropriate message"}, "id": 6}
+----
+
+* If the selected room is already assigned to another sensor, the NUC responds with the `result` value as the `sensor_id` of the sensor to which the room is assigned. The `sensor_id` is returned as a string with a maximum length of 20 characters.
+* Display shows a pop up indicating the <<NKD-Go Room Already Assigned, NKD-Go Room Already Assigned>> to other sensor with two options such as `Cancel` and `Confirm`.
+* When `Cancel` is selected in the <<NKD-Go Room Already Assigned, NKD-Go Room Already Assigned>> popup messagebox, then display will close the popup and shows the <<NKD-Go Room Selection, NKD-Go Room Selection>> screen.
+
+
+[,json]
+----
+{"jsonrpc":"2.0", "result": "123456789", "id":6}
+----
+
+*4.2.5. set_room with parameter `sensor value` as sensor id*
+
+Request: `DISP -> NUC`
+
+Params: Parameters include, `room` with the value as `selected room` in `string` format and `sensor` with the value as `sensor id` in `string` format.
+
+* Request issued when, `Confirm` button is selected in the <<NKD-Go Room Already Assigned, NKD-Go Room Already Assigned>> popup messagebox, to forcefully assign the selected room to this sensor.
+* Where `sensor` refers to the ID of the sensor to which the selected room is already assigned. This `sensor` id is received as a response to the previous request if the selected room is already assigned to a different sensor.
+
+
+[,json]
+----
+{"jsonrpc": "2.0", "method": "set_room", "params":{"room": "104-a", "sensor": "123456789"}, "id":7}
+----
+
+Response: `NUC -> DISP`
+
+* If the room assignment is successful, the `result` value will be `null`, and the display will show a <<NKD-Go Room Assigned Successfully, NKD-Go Room Assigned Successfully>> pop-up message.
+
+
+[,json]
+----
+{"jsonrpc":"2.0", "result": null, "id":7}
+----
+
+* If room assignment fails, the response will contain an `error` with the `code` set to the appropriate error code (integer) and the `message` providing the error details (string). The display will show a <<NKD-Go Room Assignment Failed, NKD-Go Room Assignment Failed>> pop-up message.
+
+
+[,json]
+----
+{"jsonrpc": "2.0", "error": {"code": -32001, "message": "appropriate message"}, "id": 7}
+----
+
+*4.2.6. Generic Response*
+
+Response: `NUC -> DISP`
+
+* If incase any of the above requests gets failed, then NUC responses back with the following error message as per jsonrpc specifations.
+
+[,json]
+----
+{"jsonrpc": "2.0", "error": {"code": -32001, "message": "appropriate message"}, "id": xx}
+----
+
+NOTE: All the requests from DISP to NUC that are explained hereafter, except for save_bms, save_audio and save_display methods, follow a fire-and-forget approach.
+Additionally, all requests, including those related to section 4.2. (Assign Room), will timeout after `READ_TIMEOUT` seconds if no response is received.
+
+'''
+
+=== 4.3. activate_sensor
+
+`DISP -> NUC`
+Request issued at the end of activation workflow, when `Activate` button is clicked in <<Home Inactive In-Room Alert Audio Settings, Home Inactive In-Room Alert Audio Settings>> screen. A spinner appears on the `Activate` button for 3 seconds. The spinner disappears if a response is received or response timeout happens. 
+
+
+[,json]
+----
+{"jsonrpc":"2.0","method":"activate_sensor","params":{"fts_state":7,"mon_start":"","mon_end":"","bms":2,"bed_wid":44,"bed_pos":-1,"occ_size":-1,"audio":1,"lang":"English","vol":2}}
+----
+
+NOTE: The parameters are explained as part of <<4.29. set_state,set_state>> method.
+
+`Response: Fire and forget`
+
+The display expects the NUC to send a <<4.29. set_state,set_state>> command as a response, reflecting the requested settings within the response timeout.  
+
+Only if all incoming parameters match the requested values is the operation considered successful. In that case, the display navigates to: 
+ 
+* <<NKD-O Bed Monitoring,NKD-O Bed Monitoring>> screen in the NKD-O variant  
+* <<NKD-Go Bed Monitoring,NKD-Go Bed Monitoring>> screen in the NKD-Go variant  
+
+If the parameters do not match, the spinner disappears and the display remains on the <<Home Inactive In-Room Alert Audio Settings,Home Inactive In-Room Alert Audio Settings>> screen.  
+
+
+'''
+
+=== 4.4. save_bms
+
+`DISP -> NUC`
+
+Request issued when BMS settings is saved from <<Home Active Bed Mode Sensitivity Settings, Home Active BMS Settings>> screen
+
+[,json]
+----
+{"jsonrpc":"2.0","method":"save_bms","params":{"bms":2}}
+----
+
+`Response NUC -> DISP`
+
+In response we expect <<4.29. set_state,set_state>> request with `bms` set to matching value, to display success toast message, if not "No Response" message is shown.
+
+'''
+=== 4.5. save_audio
+
+`DISP -> NUC`
+
+Request issued when Audio settings is saved from <<Home Active In-Room Alert Audio Settings, Home Active In-Room Alert Audio Settings>> screen
+
+[,json]
+----
+{"jsonrpc":"2.0","method":"save_audio","params":{"audio":1,"lang":"English","vol":2}}
+----
+
+`Response NUC -> DISP`
+
+In response we expect <<4.29. set_state,set_state>> request with the audio settings matching the request, to display success toast message, if not "No Response" message is shown.
+
+'''
+
+=== 4.6. save_display
+
+`DISP -> NUC`
+
+Request issued when Display (abc) settings is saved from <<Display Settings, Display Settings>> screen
+
+[,json]
+----
+{"jsonrpc":"2.0","method":"save_display","params":{"brightness":70,"abc":1}}
+----
+
+`Response NUC -> DISP`
+
+In response we expect <<4.29. set_state,set_state>> request with the `abc` set to matching value, to display success toast message, if not "No Response" message is shown.
+
+'''
+
+=== 4.7. save_occ_size
+
+`DISP -> NUC`
+
+Request issued when occupant size settings is saved from <<Home Active Occupant Size Settings, Home Active Occupant Size Settings>> screen
+
+[,json]
+----
+{"jsonrpc":"2.0","method":"save_occ_size","params":{"size":1}}
+----
+
+`Response NUC -> DISP`
+
+In response we expect <<4.29. set_state,set_state>> request with the occupant size settings matching the request, to display success toast message, if not "No Response" message is shown.
+
+'''
+
+=== 4.8. save_bed_wid
+
+`DISP -> NUC`
+
+Request issued when bed width settings is saved from <<Home Active Bed Width Settings, Home Active Bed Width Settings>> screen
+
+[,json]
+----
+{"jsonrpc":"2.0","method":"save_bed_wid","params":{"width":54}}
+----
+
+NOTE: Bed width is in inches
+
+`Response NUC -> DISP`
+
+In response we expect <<4.29. set_state,set_state>> request with the bed width settings matching the request, to display success toast message, if not "No Response" message is shown.
+
+'''
+
+=== 4.9 save_bed_pos
+
+`DISP -> NUC`
+
+Request issued when bed position/placement settings is saved from <<Home Active Bed Position Settings, Home Active Bed Position Settings>> screen
+
+[,json]
+----
+{"jsonrpc":"2.0","method":"save_bed_pos","params":{"pos":1}}
+----
+
+`Response NUC -> DISP`
+
+In response we expect <<4.29. set_state,set_state>> request with the bed placement settings matching the request, to display success toast message, if not "No Response" message is shown.
+
+'''
+
+=== 4.10 save_mon_sch
+
+`DISP -> NUC`
+
+Request issued when scheduled monitoring settings is saved from <<Home Active Exit Alert Schedule Settings, Home Active Exit Alert Schedule Settings>> screen
+
+[,json]
+----
+{"jsonrpc":"2.0","method":"save_mon_sch","params":{"mon_start":"0900","mon_end":"2257"}}
+----
+
+`Response NUC -> DISP`
+
+In response we expect <<4.29. set_state,set_state>> request with the scheduled monitoring (mon_start and mon_end) settings matching the request, to display success toast message, if not "No Response" message is shown.
+
+'''
+
+=== 4.11 save_alerts
+
+`DISP -> NUC`
+
+Request issued when alerts settings is saved from <<Home Active Alerts Settings, Home Active Alerts Settings>> screen
+
+[,json]
+----
+{"jsonrpc":"2.0","method":"save_alerts","params":{"fts_state":7}}
+----
+
+`Response NUC -> DISP`
+
+In response we expect <<4.29. set_state,set_state>> request with the alerts(fts_state) settings matching the request, to display success toast message, if not "No Response" message is shown.
+
+'''
+
+=== 4.12 get_languages
+
+`DISP -> NUC`
+
+Request issued when the **Change Language** option is selected in the <<Language Selection, Language Selection>> screen
+
+[,json]
+----
+{"jsonrpc":"2.0","method":"get_languages","id":2}
+----
+
+`NUC -> DISP` (Response)
+
+* The response should contain a JSON object with a `result` field that includes an array of available languages as strings, along with the matching `id`.
+* If a valid response is received, the <<Language Selection, Language Selection>> screen will be displayed, showing the received languages as selectable options.
+
+[,json]
+----
+{"jsonrpc":"2.0", "result":["Arabic","Cantonese","English","French","Haitian Creole","Gujarati","Hindi","Korean","Mandarin"], "id":5}
+----
+
+NOTE: 
+
+* The languages are displayed **in the same order** as they are received.
+  The display firmware **does not sort** them alphabetically or in any other order.
+* The **maximum number of languages** supported is **50**.
+* The **maximum length of each language string** is **21 characters**.
+
+'''
+
+=== 4.13. get_sys_info
+
+`DISP -> NUC`
+
+A request is issued whenever the `i` (info) icon is clicked from any of the settings pages.  
+Each time the icon is clicked, the request is sent with an updated `id` value.  
+
+[,json]
+----
+{"jsonrpc":"2.0","method":"get_sys_info","id":1}
+----
+
+`NUC -> DISP` (Response)
+
+The response is expected to include a JSON object containing `result` with the parameters `sw_ver` and `comp_id`, along with the matching `id` value.  
+If a valid response is received, the <<System Information, System Information>> screen will be displayed.  
+
+[,json]
+----
+{"jsonrpc":"2.0","result":{"sw_ver":"v2025-02Feb-24-46066775-dc4ff6be-nuc","comp_id":"00000623"},"id":3}
+----
+
+'''
+=== 4.14. activate_bed_mode
+
+`DISP -> NUC`
+Request issued by the monitor mode switcher in the <<NKD-Go Bed Monitoring, NKD-Go Bed Monitoring>> screen
+
+[,json]
+----
+{"jsonrpc":"2.0","method":"activate_bed_mode","params":{}}
+----
+
+`Response: Fire and forget`
+
+Expect the requested settings to be reflected in the upcoming <<4.29. set_state,set_state>> request, but wont care if it does not
+
+'''
+
+=== 4.15. activate_chair_mode
+
+`DISP -> NUC`
+Request issued by the monitor mode switcher in the <<NKD-Go Bed Monitoring, NKD-Go Bed Monitoring>> screen
+
+[,json]
+----
+{"jsonrpc":"2.0","method":"activate_chair_mode","params":{}}
+----
+
+`Response: Fire and forget`
+
+Expect the requested settings to be reflected in the upcoming <<4.29. set_state,set_state>> request, but wont care if it does not
+
+'''
+
+=== 4.16. pause_sensor
+
+`DISP -> NUC`
+Request issued by either of the short/long pause buttons in the <<NKD-Go Bed Monitoring, NKD-Go Bed Monitoring>> screen
+
+[,json]
+----
+{"jsonrpc":"2.0","method":"pause_sensor","params":{"pause":1}}
+----
+
+`Response: Fire and forget`
+
+Expect `pause_tmr` to be set to a non zero value, in the upcoming <<4.29. set_state,set_state>> request, so we can display pause status, but wont care if it does not
+
+NOTE: While continuously updating `pause_tmr`, NUC can choose to turn the requests into a notification, by skipping the `id` field. The display will process the request, but not respond.
+
+'''
+
+=== 4.17. clear_alert
+
+`DISP -> NUC`
+
+Request issued when `clear Alert` button is selected in the <<NKD-O Reposition Screen when Bed/Chair Alert Enabled, Reposition>> screen
+
+[,json]
+----
+{"jsonrpc":"2.0","method":"clear_alert"}
+----
+
+`Response: Fire and forget`
+
+Expect the requested settings to be reflected in the upcoming <<4.29. set_state,set_state>> request, but wont care if it does not
+
+'''
+
+=== 4.18. resume_fall_mon
+
+`DISP -> NUC`
+
+Request issued when `Resume Fall Monitoring` button is selected in the <<NKD-O Fall Detected Screen when Bed/Chair Alert Disabled, Fall Detected w.r.t Bed/Chair alert disabled>> screen
+
+[,json]
+----
+{"jsonrpc":"2.0","method":"resume_fall_mon"}
+----
+
+`Response: Fire and forget`
+
+Expect the requested settings to be reflected in the upcoming <<4.29. set_state,set_state>> request, but wont care if it does not
+
+'''
+
+=== 4.19. VIRC : ir_recv_event
+
+* Notification from `DISP -> NUC` containing the received IR data.  
+
+* This notification is triggered when IR data is received from the remote via the IR receiver.  
+
+* The following JSON-RPC string includes the method `ir_recv_event` with the parameter `value`, which holds the received 32-bit IR data.
+
+[,json]
+----
+{"jsonrpc": "2.0", "method": "ir_recv_event", "params": {"value":32 bit value}}
+----
+
+* In the JSON string, the 'id' field is not required, and no response is expected from the NUC since it is a notification.  
+* This feature functions across all variants and modes, including inactive mode, active mode, and the default Welcome screen.  
+* Receiving IR data and forwarding it to the NUC does not require setting a `specific variant`.
+* Upon receiving the IR data, if the display is in sleep mode, it will wake up the display and also sends out the IR data to the NUC at the same time.
+
+> Note: IR remote data won't be received in the display which is designed for alert2d. Refer to <<8. Changes in display firmware behaviour w.r.t Alert2d version v2, changes w.r.t 2da display>>
+'''
+
+=== 4.20. deactivate_sensor
+
+`DISP -> NUC`
+Request issued by Deactivate button on the <<NKD-Go Settings Home, NKD-Go Settings Home>> screen
+
+[,json]
+----
+{"jsonrpc":"2.0","method":"deactivate_sensor"}
+----
+
+`Response: Fire and forget`
+
+Move to <<NKD-Go Home Inactive, NKD-Go Home Inactive>> screen via <<Deactivating, Deactivating>> screen
+
+'''
+
+=== 4.21. shutdown
+
+`DISP -> NUC`
+
+A request is issued when the `Shutdown` button is selected/clicked on either the <<NKD-Go Settings Home, NKD-Go Settings Home>> screen or the <<NKD-Go Home Inactive, NKD-Go Home Inactive>> screen.  
+
+[,json]
+----
+{"jsonrpc":"2.0","method":"shutdown"}
+----
+
+`Response: Fire and Forget`
+
+This is a fire-and-forget request.  
+We expect the `screen` parameter to update to either `Deactivating` or `Welcome/Shutdown` in the subsequent <<4.29. set_state,set_state>> response.  
+If the expected settings are received, the display transitions to the corresponding `Deactivating` or `Welcome/Shutdown` screen.  
+If not, the request is ignored and no further action is taken.  
+
+'''
+
+=== 4.22. set_disp
+
+`NUC --> DISP`
+[,json]
+----
+{
+  "jsonrpc": "2.0",
+  "method": "set_disp",
+  "params": {
+    "brightness": 60,
+    "abc": 0
+  },
+  "id": 2
+}
+----
+
+*brightness*
+
+Display brightness control, a Number, can range between [0-100], where `0` is no brightness and `100` is full brightness.
+
+*abc*
+
+Automatic Brightness Control (abc), uses ambient light sensor (als) to automatically adjust display brightness, a Number, can be..
+
+|===
+| abc | value
+
+| off (disable) | 0
+
+| on (enable) | 1
+|===
+
+> *Note: The `abc` parameter in the `set_disp` command is ignored because it is now handled exclusively by the `set_state` command to prevent conflicts.*
+
+> Note: abc setting won't have any affect in the display which is designed for alert2d. Refer to <<8. Changes in display firmware behaviour w.r.t Alert2d version v2, changes w.r.t 2da display>>
+'''
+
+=== 4.23. NUC reset pin control
+
+* GPIO 46 drives the NUC reset pin, triggering the NUC restart after a `KEEP_ALIVE_TIMEOUT`.
+* This feature is disabled by default.
+* When you enable it via the API, the NUC will restart once upon timeout, then the this feature is automatically disabled.
+* To use the feature again, you must explicitly re-enable it through the API.
+* This mechanism only operates when communicating over the NUC’s serial interface—not when connected to a laptop.
+* It remains functional even if the sensor is inactive.
+* Use the following APIs to toggle the NUC watchdog control on or off.
+
+
+*enable_watchdog (to enable nuc watchdog)*
+`NUC -> DISP`
+[,json]
+----
+{
+  "jsonrpc": "2.0",
+  "method": "enable_watchdog",
+  "params": [1],
+  "id": 2
+}
+----
+
+*enable_watchdog (to disable nuc watchdog)*
+
+`NUC -> DISP`
+[,json]
+----
+{
+  "jsonrpc": "2.0",
+  "method": "enable_watchdog",
+  "params": [0],
+  "id": 2
+}
+----
+
+> Note: Nuc reset pin control won't have any affect in the display which is designed for alert2d. Refer to <<8. Changes in display firmware behaviour w.r.t Alert2d version v2, changes w.r.t 2da display>>
+'''
+
+=== 4.24. Software update progress indicator as toast message
+
+`NUC -> DISP`
+
+* The set_toast method displays the message as a toast message.
+* The maximum characters in the message parameter should not exceed 26. If the no.of characters are more than 26 then the `INVALID_PARAMS` error will be returned to nuc.
+* To hide the toast message, the message parameter should be empty, i.e., like `"message":""`
+* The toast message is displayed in all the landing screens i.e., <<NKD-Go Home Inactive, NKD-Go Home Inactive>>, <<NKD-Go Bed Monitoring, NKD-Go Bed Monitoring>> <<Deactivating, Deactivating>> and <<Welcome Screen, Welcome>> screens.
+* The toast message is hidden in all the settings screens.
+
+
+[,json]
+----
+{
+  "jsonrpc": "2.0",
+  "method": "set_toast",
+  "params": {
+    "message":"message with max 26 chars"
+  },
+  "id": 2
+}
+----
+
+'''
+
+=== 4.25. Get device info
+
+`NUC -> DISP`
+
+[,json]
+----
+{
+  "jsonrpc": "2.0",
+  "method": "get_device_info",
+  "id": 2
+}
+----
+
+`DISP -> NUC`
+
+[,json]
+----
+{"jsonrpc":"2.0","result": {
+    "mfr": "Virtusense",
+    "model": "NA",
+    "serial": "43:34:34:34:34:34",
+    "hw_ver": "v1.0.2",
+    "fw_ver": "v1.0.0"
+  },
+  "id":2
+}
+----
+
+* When `get_device_info` method comes from NUC, display will send response to the method with device information which includes
+
+** Manufacturer name
+** Model
+** Serial i.e., MAC address
+** Hardware version
+** Firmware version
+
+|===
+| Model | value
+
+| NKD | NA
+| Senscap | Senscap
+|===
+
+|===
+| hw_ver | value
+
+|nkd v1.0.2 and earlier | v1.0.2
+| nkd v1.0.3 | v1.0.3
+| Senscap | NA
+|===
+
+=== 4.26. Get Device Status
+
+`NUC -> DISP`
+
+[,json]
+----
+{
+  "jsonrpc": "2.0",
+  "method": "get_device_status",
+  "id": 2
+}
+----
+
+`DISP -> NUC`
+
+[,json]
+----
+{"jsonrpc":"2.0","result": {
+    "uptime": XXXXXXX,
+  },
+  "id":2
+}
+----
+
+* When `get_device_status` method comes from NUC, display will send response to the method with device status which includes `Device up-time`
+
+'''
+
+=== 4.27. Restart NKD: restart_nkd
+
+`NUC -> DISP`
+
+[,json]
+----
+{"jsonrpc": "2.0", "method": "restart_nkd", "id": 2}
+----
+
+* This method doesn't have any `params` field.
+* When *"restart_nkd"* is received from the NUC, the display triggers a soft restart, causing the MCU to reboot using the `esp_restart()` function.
+* The display does not send any response to the NUC.
+* The display then restarts to the <<Welcome Screen, Welcome>> screen.
+* After the restart, the NUC must initiate communication with the display by calling the <<4.1. set_variant,set_variant>> method.
+
+'''
+
+=== 4.28. restart_display
+
+`NUC -> DISP`
+
+[,json]
+----
+{"jsonrpc": "2.0", "method": "restart_display", "id": 2}
+----
+
+* This command performs the same functionality as the <<4.27. Restart NKD: restart_nkd, restart_nkd>>  command.  
+* The `restart_display` command was introduced to align with the naming convention.
+'''
+
+> Note: <<4.27. Restart NKD: restart_nkd, restart_nkd>> and <<4.28. restart_display, restart_display>> are identical commands that perform the same operation—restarting the display.
+
+=== 4.29. set_state
+
+`NUC --> DISP`
+
+* Reject `mode=1` (bed mode) without `bms`
+* Reject command if `room_number` is empty or if `room_number` parameter itself not available
+* Reject command if `fts_state` is zero or not available
+* Reject command if `fts_avail` is zero or not available
+* `screen` change will not take effect while user is in activation workflow, but is allowed while waiting for reponse to  "activate" request.
+* Similarly `screen` change is not allowed while user is in settings workflow, but is allowed while waiting for response to "deactivate" request.
+* `syserr_title`, `alert_title` if present will override `syserr`, `alert` respectively
+* only one of `pause_tmr`, `syserr`, `alert`, `cal` can be set at a time.
+* with `set_state` the expectation is that NUC will dump the entire system state on every request, hence any missing parameter will be reset for that session, unlike `set_disp`, where the missing param value from previous session will be retained.
+
+
+[,json]
+----
+{
+  "jsonrpc": "2.0",
+  "method": "set_state",
+  "params": {
+    "screen": 2,
+    "fts_avail":127,
+    "fts_state":7,
+    "bed_pos":1,
+    "bed_wid":60,
+    "occ_size":2,
+    "mon_start":"2130",
+    "mon_end":"0700",
+    "bms": 3,
+    "audio": 1,
+    "vol": 2,
+    "lang": "English",
+    "mode": 2,
+    "abc":0,
+    "pause_tmr": 0,
+    "pr_inj_tmr": 0,
+    "syserr":0,
+    "syserr_title":"new error",
+    "alert": 0,
+    "alert_title": "",
+    "cal":0,
+    "room_number":"1001-a"
+  },
+  "id": 2
+}
+----
+
+> Note: If any alert or error occurs when the user is in any of the settings pages, a popup will appear displaying the alert or error message. Once the user acknowledges (clicks) the popup, they will be redirected to the <<NKD-Go Bed Monitoring, Home active>> screen. If user selects `X` icon present in the popup then the popup will be closed. There is no timeout for this popup. 
+
+=== params
+
+*screen*
+
+Landing screens, a Number, can be...
+
+|===
+| screen | value
+
+| Home Inactive | 1
+
+| Home Active | 2
+
+| [.line-through]#Calibrating# | [.line-through]#3#
+
+| [.line-through]#Calibrating Chair# | [.line-through]#4#
+
+| Deactivating | 5
+
+| Welcome/Shutdown | 6
+
+| Activating | 7
+|===
+
+*fts_avail*
+
+- The `fts_avail` field indicates which features are enabled in the cloud. This determines which fields are shown or hidden in the UI workflow like in `Settings Home` page.
+** This field is transmitted as a *decimal value* (instead of hexadecimal), since JSON-RPC does not support hexadecimal values.  
+- Within `fts_avail`, *bit 0* (corresponding to `Bed/Chair Exit Alerts`) must always be set to `1`.  
+** This requirement comes from the VST team, which mandates that `Bed/Chair Exit Alerts` are always enabled in the cloud.  
+- The other bits can be either `0` or `1`, depending on whether the corresponding feature is enabled or disabled in the cloud.
+
+|===
+|Parameter | Bit
+
+|Bed/chair exit alert | 0
+|Fall alert | 1
+|Reposition/Pressure Injury alert | 2
+|Scheduled Monitoring | 3
+|Bed Placement | 4
+|Bed Width | 5
+|Occupant Size | 6
+|===
+
+
+*fts_state*
+
+- The `fts_state` field indicates which features are currently active or enabled on the sensor by the user.
+- This field is transmitted as a *decimal value* (instead of hexadecimal), since JSON-RPC does not support hexadecimal values.
+- This field value should not be zero, as at least any one of the `Alerts` must be enabled on the sensor.
+
+|===
+|Parameter | Bit
+
+|Bed/chair exit alert | 0
+|Fall alert | 1
+|Reposition/Pressure Injury alert | 2
+|===
+
+*bed_pos*
+Bed Position, a Number, can be...
+
+|===
+| bed_pos | value
+| left | 1
+| center | 2
+| right | 3
+
+|===
+
+*bed_wid*
+bed Width in inches, a Number, can be 38,42 and can range between [44-80] inches based on user selection.
+
+*occ_size*
+Occupant Size, a Number, can be...
+
+|===
+| occ_size | value
+| small | 1
+| standard | 2
+| large | 3
+
+|===
+
+*mon_start*
+Scheduled Monitoring Start Time, a String in "HHMM" 24-hour format, where "HH" represents hours (00-23) and "MM" represents minutes (00-59). Example: "2130" for 9:30 PM.
+
+*mon_end*
+Scheduled Monitoring End Time, a String in "HHMM" 24-hour format, where "HH" represents hours (00-23) and "MM" represents minutes (00-59). Example: "0700" for 7:00 AM.
+
+
+*bms*
+
+Bed Mode Sensitivity, a Number, can be...
+
+|===
+| bms | value
+
+| low | 1
+
+| high | 2
+
+| ultra high | 3
+|===
+
+*audio*
+
+In-Room Alert Audio, a Number, can be...
+
+|===
+| audio | value
+
+| off | 0
+
+| on | 1
+|===
+
+*vol*
+
+In-Room Alert Audio Volume, a Number, can be...
+
+|===
+| vol | value
+
+| low | 1sensor on
+
+| medium | 2
+
+| high | 3
+|===
+
+*lang*
+
+`lang` value must be string and also it should not be an empty string
+
+*mode*
+
+Monitoring mode, a Number, can be..
+
+|===
+| mode | value
+
+| bed | 1
+| chair | 2
+| Fall  | 3
+|Pressure Injury | 4
+|Scheduled Mon (Monitoring) | 5
+
+|===
+
+*abc*
+
+Automatic Brightness Control (abc), uses ambient light sensor (als) to automatically adjust display brightness, a Number, can be..
+
+|===
+| abc | value
+
+| off (disable) | 0
+
+| on (enable) | 1
+|===
+
+* when abc (als) is disabled, brightness slider will be enabled.
+* when abc (als) is enabled,
+** brightness slider will be disabled.
+** display brightness will be updated every 2 seconds once
+** display brightness is automatically adjusted based on the ambient light sensor (ALS) readings. 
+** When the surrounding brightness is low (dim environment), the display brightness is reduced. 
+** Conversely, when the surrounding brightness is high (brighter environment), the display brightness is increased accordingly.
+
+> Note: abc setting won't work when the user is in settings display page. It is just discarded. For this abc setting to take effect, user should be in any of the screens other than settings display page.
+
+*pause*
+
+Pause Sensor, a Number, can be...
+
+|===
+| pause | value
+
+| short | 1
+
+| long | 2
+|===
+
+*pause_tmr*
+
+Pause Timer, a Number in seconds, can range between [0-65535] seconds. Pause status screen will be displayed only when `pause_tmr` value is between 1 and 65535, anything other than this values is not considered as pause status.
+
+*pr_inj_tmr*
+
+The `Pressure Injury Reposition Timer` is a numeric value in minutes and can range from `0 to 5999 minutes`, which corresponds to `99 hours and 59 minutes`. This upper limit is defined because the display can show a maximum of two digits each for the hours and minutes fields.
+
+This timer is displayed alongside the status title on the <<NKD-O Pressure Injury Timer, Home Active>> screens whenever `Reposition Alerts` are enabled, even if the timer value is zero.
+If Reposition Alerts are disabled, the timer is not shown, and its value is ignored.
+
+*syserr*
+
+`NUC -> DISP`
+
+System Error, a Number, can be...
+
+|===
+| syserr | value
+
+| none | 0
+
+2+|*_monitoring errors_*
+| Incorrect Mode | 11
+| Sunlight | 12
+| Obstructed | 13
+
+2+|*_connectivity errors_*
+| Not Monitoring | 41
+| System Disconnected | 42
+
+2+|*_other errors_*
+| Unassigned | 61
+|===
+
+*syserr_title*
+
+`NUC -> DISP`
+
+Custom System Error Title, a String, max 50 characters.
+
+*alert*
+
+`NUC -> DISP`
+
+Monitoring Alert, a Number, can be...
+
+|===
+| alert | value
+
+| none| 0
+
+| Bed Exit| 1
+
+| Chair Exit | 2
+
+| Fall Detected | 101
+
+| Reposition | 102
+|===
+
+*alert_title*
+
+`NUC -> DISP`
+
+Custom Alert Title, a String, max 50 characters.
+
+
+NOTE: System errors and alerts will be shown only after the sensor is activated. During inactive mode all the errors and alerts are discarded.
+
+NOTE: After the sensor is activated, when there is no data i.e., nuc sends an empty set_state command, then display will show no data error
+
+*cal*
+
+`NUC -> DISP`
+
+|===
+| cal | value
+
+| off | 0
+
+| on | 1
+
+| chair | 2
+|===
+
+The calibration screen values are as follows:
+
+* Generic calibration screen: **1**  
+* Chair calibration screen: **2**
+
+*room_number*
+
+`room_number` value must be string and also it should not be an empty string
+
+== 5. Timeouts
+
+|===
+| Timeout Event | Duration (Secs)
+
+|READ_TIMEOUT | 3
+
+|KEEP_ALIVE_TIMEOUT | 300
+
+|INACTIVE_TIMEOUT | 120
+
+|IWDG_TIMEOUT_MS | 10
+
+|ASSIGN_ROOM_TIMEOUT  | 45
+
+|ACTIVATING_TIMEOUT  | 60
+|===
+ 
+=== 5.1. READ_TIMEOUT
+ 
+- If a request is sent from `DISP -> NUC` and no response is received within the `READ_TIMEOUT` duration, the response is disregarded, and a `No Response` message is briefly displayed.  
+- This applies only to requests that expects a response from NUC.
+ 
+ 
+=== 5.2. KEEP_ALIVE_TIMEOUT
+ 
+If the display does not receive a <<4.29. set_state,set_state>> command from NUC for `KEEP_ALIVE_TIMEOUT` duration
+ 
+* display will show a "System Disconnected" status message, and will remain so until a <<4.29. set_state,set_state>> request arrives
+* display firmware will generate nuc reset signal on the nuc reset pin *(nuc watchdog triggers)* after `KEEP_ALIVE_TIMEOUT` duration. This happens only if the nuc watchdog control is enabled.
+ 
+=== 5.3. INACTIVE_TIMEOUT
+ 
+- When `INACTIVE_TIMEOUT` elapses with no user interaction, the display reacts based on the sensor state:
+ 
+  * **Sensor active:** it first navigates to the nearest home screen (if not already there), then enters sleep mode. If the display is already on the home screen when the timeout occurs, it bypasses navigation and goes straight into sleep mode.
+  * **Sensor inactive:** it goes to the <<NKD-Go Home Inactive, NKD-Go Home Inactive>> screen but remains awake.
+ 
+* Any touch after the display has entered sleep mode will wake it and restore its previous brightness; touches made while asleep are otherwise ignored.
+ 
+ 
+==== 5.3.1. Sleep Mode
+Sleep Mode means nothing but reducing the display brightness to 30%. The display wakes up to the previous brightness level under following conditions
+
+* Any touch on the display
+* Any alert or error or timer or cal pages reuested by NUC. When any of the mentioned pages are requested by NUC, the display wakes up and remains at that level until the respective alert or error or cal or timer is cleared and display is back to normal monitoring mode. When the display is back to normal monitoring mode, the display will enter sleep mode after `INACTIVE_TIMEOUT` duration if there is no user interaction.
+* When IR receiver receives any IR data from the remote (only for the display which has IR receiver)
+ 
+=== 5.4. IWDG_TIMEOUT_MS (Display watchdog control)
+ 
+If the display firmware fails to reset the display watchdog within the `IWDG_TIMEOUT_MS` duration, the display watchdog will be triggered, causing the display to reset.
+ 
+=== 5.5. ASSIGN_ROOM_TIMEOUT
+- During the room assignment process, when a `set_room` request is sent from `DISP -> NUC`, if no response is received within the `ASSIGN_ROOM_TIMEOUT` duration, the display shows a **"No Response"** pop-up message.  
+- For all other requests, the response timeout is governed by the `READ_TIMEOUT` duration.  
+- The `set_room` request is an exception, as its timeout is governed by `ASSIGN_ROOM_TIMEOUT` since the NUC typically takes longer than 3 seconds to send a response.
+- During this period , touch inputs are ignored.
+
+=== 5.6. ACTIVATING_TIMEOUT
+- During the activation process, when an `activate_sensor` request is sent from `DISP -> NUC`, the NUC should respond with **screen 7 (ACTIVATING screen)**. If the response is received within 3 seconds, the <<Activating, Activating>> screen is shown, and only the `screen` parameter in the `set_state` command is validated; all other parameter validations are skipped. If no response is received within 3 seconds, a **"no_response"** toast is displayed.
+
+- Once the ACTIVATING screen appears, the `ACTIVATING_TIMEOUT` timer begins. If a valid `set_state` response is received within this timeout, the display navigates to the appropriate screen. If no valid response is received before the timeout expires, the system returns to the **In-Room Audio** screen and shows a **"no_response"** toast.
+
+== 6. Errors
+
+|===
+|ERROR |CODE
+
+2+|*_JSON-RPC ERRORS_*
+|PARSE_ERROR |-32700
+|INVALID_REQUEST |-32600
+|METHOD_NOT_FOUND |-32601
+|INVALID_PARAMS |-32602
+|INTERNAL_ERROR |-32603
+|MULTIPLE_PARAMS_SET |-32000
+|INVALID_RESPONSE |-32002
+|UNKNOWN_ERROR |-32003
+2+|*_SYSTEM ERRORS_*
+|SCREEN_LOCKED_BY_USER |-32001
+|VARIANT_UNSET |-32004
+2+|*_TOUCH EVENT CODES_*
+|TOUCH_FIRST_FAIL |-32301
+|TOUCH_REINIT_FAIL |-32302
+|TOUCH_REINIT_SUCCESS |32303
+| [.line-through]#TOUCH_SECOND_FAIL# | [.line-through]#-32304#
+|===
+
+
+=== PARSE_ERROR (-32700)
+- This error is returned when `Invalid JSON` command is received by the display. This error occurs while parsing the JSON command.
+
+=== INVALID REQUEST (-32600)
+- The received JSON request is considered invalid if it does not contain the required keywords such as `jsonrpc` and at least one of `method`, `result`, or `error`.
+
+=== METHOD_NOT_FOUND
+- If the `method` sent by NUC does not exist or is not available this error is returned .
+
+=== INVALID_PARAMS
+- This error happens when any of the parameter sent by NUC is not valid
+
+=== INTERNAL_ERROR (-32603)
+- When an `Internal JSON-RPC` error occurs, it is returned as `Internal error`.
+
+=== MULTIPLE_PARAMS_SET (-32000)
+- This error happens when more than one of `pause_tmr`, `syserr`, `alert`, `cal` is set at a time in <<4.29. set_state,set_state>> command from `NUC -> DISP`.
+
+=== UNKNOWN_ERROR (-32003)
+- This error is returned when an unlisted or undefined error occurs.
+
+=== SCREEN_LOCKED_BY_USER (-32001)
+- This error happens when NUC sends `set_disp` command when the user is in <<Display Settings, Display Settings>> screen.
+
+=== VARIANT_UNSET (-32004)
+- Upon device boot-up, if the <<4.29. set_state,set_state>> command is received from the NUC while the variant is not set, this error is returned.
+
+== Touch related event codes
+
+*DISP → NUC*
+
+* All the touch related codes are sent from the display to the NUC as *notifications*, meaning no response is expected from the NUC.
+* When a touch failure is detected, the display sends the  `TOUCH_FIRST_FAIL` error code `-32301` to the NUC and attempts to reinitialize the touch driver.
+
+[,json]
+----
+ {"jsonrpc":"2.0","method":"system_event","params":{"code":-32301,"message":"TOUCH_FIRST_FAIL"}}
+----
+
+* If the touch reinitialization fails, the display sends the `TOUCH_REINIT_FAIL` error code `-32302` to the NUC.
+* This error code is transmitted every second until the device is restarted.  See <<System Restart (touch recovery),System Restart>>.
+
+[,json]
+----
+ {"jsonrpc":"2.0","method":"system_event","params":{"code":-32302,"message":"TOUCH_REINIT_FAIL"}}
+----
+
+* If the touch reinitialization succeeds, the display sends the `TOUCH_REINIT_SUCCESS` success code `32303` to the NUC.
+
+[,json]
+----
+ {"jsonrpc":"2.0","method":"system_event","params":{"code":32303,"message":"TOUCH_REINIT_SUCCESS"}}
+----
+
+NOTE: If touch reinitialization succeeds but later fails again, the display sends the `TOUCH_FIRST_FAIL` error code (`-32301`) to the NUC and attempts to reinitialize the touch again, repeating the process as described earlier.  
+
+NOTE: The display continues reinitializing the touch driver until it successfully reinitializes it. The process stops only if the display fails to reinitialize the touch. In such a case, the display sends the `TOUCH_REINIT_FAIL` error code (`-32302`) to the NUC every second until the NUC restarts the display. Refer to <<System Restart (touch recovery),System Restart>> for more details.
+
+
+== System Restart (touch recovery)
+
+* Use the `restart_nkd` method to restart the display or reupload the display firmware.
+
+
+== 7. References
+
+- Checkout xref:../attachments/NKD-O.zip[NKD-O] for the detailed workflow of NKD-O variant.
+- Checkout xref:../attachments/NKD-GO.zip[NKD-GO] for the detailed workflow of NKD-Go variant.
+- Checkout xref:../attachments/NKD-RO.zip[NKD-RO] for the detailed workflow of NKD-Read only variant.
+
+
+== 8. Changes in display firmware behaviour w.r.t Alert2d version v2
+
+Following hardware components are removed from the display board which is designed for alert2d version v2
+- Automatic light sensor (ALS) is removed
+- IR receiver is removed
+- NUC reset control circuit removed.
+
+Changes w.r.t firmware and gui
+
+- In gui, in the display settings page, the `Adaptive Lighting` selection is disabled completely.
+- When the <<4.22. set_disp,display brightness command>> is received by the display, though of the `ABC` selection is `1`, the display reacts to it with json response as `ok` but internally it won't act on it.
+- When the <<4.23. NUC reset pin control,NUC reset control>> command is received, the display just sends back the json response as `ok` but internally it won't act on it.
+- Though when the IR remote is pointed to display and clicked, no data will be received by the display.
+
+
+== 9. Changes in display firmware behaviour w.r.t SeeedStudio Senscap Display
+
+Following hardware components are are not available in the  SeeedStudio Senscap Display
+- Automatic light sensor (ALS)
+- IR receiver
+- NUC reset control circuit.
+
+Changes w.r.t firmware and gui
+
+- In gui, in the display settings page, the `Adaptive Lighting` selection is disabled completely.
+- When the <<4.29. set_state,set state command>> is received by the display, though of the `ABC` selection is `1`, the display reacts to it with json response as `ok` but internally it won't act on it.
+- When the <<4.23. NUC reset pin control,NUC reset control>> command is received, the display just sends back the json response as `ok` but internally it won't act on it.
+- Though when the IR remote is pointed to display and clicked, no data will be received by the display.
+
+
+== Ghost touch / Liquid touch filter
+
+=== set_liquid_touch_filter
+
+In order to overcome liquid touch / ghost touch an algorithm/filter is implemented.
+
+Command from `NUC -> DISP` to set liquid touch filter is as following 
+```json
+{"jsonrpc":"2.0","method":"set_liquid_touch_filter","params":{"enable":1},"id":2}
+```
+|===
+|parameter | value
+
+| disable | 0
+| enable | 1
+|===
+
+
+Response : `DISP -> NUC`
+
+- On success, result with value as null sent to NUC 
+```json
+{"jsonrpc":"2.0", "result": null, "id":2} 
+```
+
+- On failure, respective error is sent to NUC 
+```json
+{"jsonrpc": "2.0", "error": {"code": -32001(appropriate code), "message": "appropriate message"}, "id": 2} 
+```
+
+NOTE: By default, liquid touch filter is enabled in the display.
+
+=== set_liquid_touch_debug_logs
+
+Command from `NUC -> DISP` to enable and disable debug logs w.r.t liquid touch filter is as following 
+
+```json
+{"jsonrpc":"2.0","method":"set_liquid_touch_debug_logs","params":{"enable":1},"id":2}
+```
+|===
+|parameter | value
+
+| disable | 0
+| enable | 1
+|===
+
+
+Response : `DISP -> NUC`
+
+- On success, result with value as null sent to NUC 
+```json
+{"jsonrpc":"2.0", "result": null, "id":2} 
+```
+
+- On failure, respective error is sent to NUC 
+```json
+{"jsonrpc": "2.0", "error": {"code": -32001(appropriate code), "message": "appropriate message"}, "id": 2} 
+```
+
+NOTE: By default, liquid touch debug logs are disabled in the display.

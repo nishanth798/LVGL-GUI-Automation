@@ -1,0 +1,86 @@
+<globals>
+	<api>
+		<!-- Add <enumdefs> here -->
+	</api>
+
+	<consts>
+		<!-- Add <px>, <int>, <color> etc here -->
+	</consts>
+
+	<styles>
+		<!-- Add <style> tags here -->
+	</styles>
+
+	<subjects>
+		<!-- Add <int>, <string>, or <float> subjects here -->
+		<int name="selected_mon" value="1" />
+		<int name="hour" value="9" min_value="0" max_value="11" />
+		<int name="minute" value="0" min_value="0" max_value="59" />
+		<string name="time_half" value="AM" />
+	</subjects>
+
+	<images>
+		<!-- Add <file> or <data> tags here -->
+		<data src_path="images/image_left_arrow.png" name="image_left_arrow" color_format="rgb565a8" />
+		<data src_path="images/image_close.png" name="image_close" color_format="rgb565a8" />
+		<data src_path="images/image_up_button.png" name="image_up_arrow" color_format="rgb565a8" />
+		<data src_path="images/image_down_button.png" name="image_down_arrow" color_format="rgb565a8" />
+	</images>
+
+	<fonts>
+		<!-- Add <bin> , <tiny_ttf>, <freetype> tags here -->
+		<bin
+			name="open_sans_bold_18"
+			as_file="false"
+			bpp="4"
+			src_path="fonts/OpenSans-Bold.ttf"
+			size="18"
+			range="0x20-0x7f"
+		/>
+
+		<bin
+			name="open_sans_bold_20"
+			as_file="false"
+			bpp="4"
+			src_path="fonts/OpenSans-Bold.ttf"
+			size="20"
+			range="0x20-0x7f"
+		/>
+
+		<bin
+			name="open_sans_bold_24"
+			as_file="false"
+			bpp="4"
+			src_path="fonts/OpenSans-Bold.ttf"
+			size="24"
+			range="0x20-0x7f"
+		/>
+
+		<bin
+			name="open_sans_semibold_18"
+			as_file="false"
+			bpp="4"
+			src_path="fonts/OpenSans-SemiBold.ttf"
+			size="18"
+			range="0x20-0x7f"
+		/>
+
+		<bin
+			name="open_sans_semibold_36"
+			as_file="false"
+			bpp="4"
+			src_path="fonts/OpenSans-SemiBold.ttf"
+			size="36"
+			range="0x20-0x7f"
+		/>
+
+		<bin
+			name="open_sans_regular_18"
+			as_file="false"
+			bpp="4"
+			src_path="fonts/OpenSans-Regular.ttf"
+			size="18"
+			range="0x20-0x7f"
+		/>
+	</fonts>
+</globals>

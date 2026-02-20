@@ -1,0 +1,69 @@
+= NUC Kinect Display
+A user interface for sensor configuration
+
+== Directory Structure
+
+* `firmware`
+** This folder contains
+*** Firmware binary files in zip format. Extract the files before uploading
+** This folder contains binaries for **both Sensecap and NKD displays**:
+  ***  SenseCAP binaries are suffixed with **`vst_senscap_display`**
+  ***  NKD binaries are suffixed with **`vst-sentry_`**
+
+* `docs`
+** This folder contains
+*** `api.adoc` file which contains all the API information
+*** `README.adoc` file (this file)
+*** `devs.adoc` file which contains information for the developers to get started with the project
+
+== Upload pre-built binary
+
+=== Prerequisites
+
+1. Install Arduino CLI
++
+link:https://github.com/arduino/arduino-cli/releases/tag/0.34.2[Download v0.34.2]: choose binary appropriate for your platform.
++
+Following example is for `Linux_64 (amd64)` platform
++
+[source,bash]
+----
+wget https://github.com/arduino/arduino-cli/releases/download/0.34.2/arduino-cli_0.34.2_Linux_64bit.tar.gz
+----
++
+Unarchive and add to executable path
++
+[source,bash]
+----
+sudo tar -C /usr/local/bin/ -zxvf arduino-cli_0.34.2_Linux_64bit.tar.gz arduino-cli
+----
+
+2. Install esp32 core
++
+[source,bash]
+----
+arduino-cli core update-index
+arduino-cli lib update-index
+arduino-cli core install esp32:esp32@2.0.14
+----
+
+=== Upload Firmware
+
+[source,bash]
+----
+cd firmware/<extracted_binaries_folder>/
+arduino-cli upload --verify --fqbn "esp32:esp32:esp32s3" --input-dir ./ --port <port> ./
+----
+
+[NOTE]
+====
+Replace `<port>` with the actual port on your computer, such as `/dev/ttyACM0` for NKD and `/dev/ttyUSB0` for Sensecap.
+====
+
+[NOTE]
+====
+* For the **SenseCAP display**, the **`/dev/USBX`** port must be used for both **firmware flashing** and **serial communication**, instead of the **`/dev/ACMX`** port.
+====
+
+== Source code
+For source code refer to the path link:https://github.com/slicktronix/nkd[source code]

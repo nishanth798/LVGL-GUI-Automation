@@ -1,0 +1,8 @@
+name: nnd
+version:
+  release\/v(?<version>+({0..9}).+({0..9})): $<version>
+  main: main
+title: NUC and Display
+nav:
+  - modules/ROOT/nav.adoc
+start_page: ROOT:README.adoc

@@ -1,0 +1,138 @@
+<component>
+	<!-- Preview area shown inside LVGL Pro editor -->
+	<previews>
+		<preview width="480" height="480" />
+	</previews>
+
+	<!-- Public API: property used to set title text -->
+	<api>
+		<prop name="title" type="string" default="Scheduled Monitoring Start Time" />
+	</api>
+
+	<!-- Styles used inside this component -->
+	<styles>
+		<!-- Main container style -->
+		<style
+			name="style_main_container"
+			bg_color="0xffffff"
+			border_color="0xd9d9d9"
+			border_opa="255"
+			border_width="1"
+			width="448"
+			height="content"
+			radius="10"
+			shadow_width="6"
+			shadow_color="0x000000"
+			shadow_opa="64"
+			shadow_offset_x="0"
+			shadow_offset_y="3"
+			pad_all="16"
+		/>
+
+		<!--  button style used for the time display  -->
+		<style
+			name="style_time_disp_btn"
+			bg_color="0xfafafa"
+			border_color="0xd1d1d1"
+			border_opa="255"
+			border_width="3"
+			width="120"
+			height="72"
+			radius="5"
+			pad_hor="41"
+			pad_ver="34"
+			text_font="open_sans_semibold_36"
+		/>
+	</styles>
+
+	<!-- Root visual element for the component -->
+	<view extends="lv_obj" flex_flow="column">
+		<!-- Apply the main container style -->
+		<style name="style_main_container" />
+
+		<!-- Title label (uses API property $title) -->
+		<lv_label text="$title" style_text_font="open_sans_semibold_18" />
+
+		<!-- Sub-container holding all time-adjust controls -->
+		<lv_obj
+			style_pad_all="0"
+			height="content"
+			width="100%"
+			style_border_width="0"
+			flex_flow="column"
+			scrollable="false"
+		>
+			<!-- Row for hour / minute / AM-PM columns -->
+			<row style_pad_column="28">
+				<!-- ====================== Hour column ====================== -->
+				<column style_border_width="0" style_pad_row="16">
+					<!-- Hour increment button -->
+					<lv_button style_pad_all="0">
+						<lv_image src="image_up_arrow" />
+						<subject_increment_event step="1" subject="hour" rollover="true" />
+					</lv_button>
+
+					<!-- Hour display button -->
+					<lv_button>
+						<remove_style_all />
+						<style name="style_time_disp_btn" />
+						<lv_label bind_text="hour" align="center" />
+					</lv_button>
+
+					<!-- Hour decrement button -->
+					<lv_button style_pad_all="0">
+						<lv_image src="image_down_arrow" />
+						<subject_increment_event subject="hour" step="-1" rollover="true" />
+					</lv_button>
+				</column>
+
+				<!-- ====================== Minute column ====================== -->
+				<column style_border_width="0" style_pad_row="16">
+					<!-- Minute increment button -->
+					<lv_button style_pad_all="0">
+						<lv_image src="image_up_arrow" />
+						<subject_increment_event step="1" subject="minute" rollover="true" />
+					</lv_button>
+
+					<!-- Minute display button -->
+					<lv_button>
+						<remove_style_all />
+						<style name="style_time_disp_btn" />
+						<lv_label bind_text="minute" align="center" />
+					</lv_button>
+
+					<!-- Minute decrement button -->
+					<lv_button style_pad_all="0">
+						<lv_image src="image_down_arrow" />
+						<subject_increment_event subject="minute" step="-1" rollover="true" />
+					</lv_button>
+				</column>
+
+				<!-- ====================== AM / PM column ====================== -->
+				<column style_border_width="0" style_pad_row="16">
+					<!-- Set AM -->
+					<lv_button style_pad_all="0" name="up_b">
+						<lv_image src="image_up_arrow" />
+						<subject_set_string_event subject="time_half" value="AM" />
+					</lv_button>
+
+					<!-- AM/PM display -->
+					<lv_button>
+						<remove_style_all />
+						<style name="style_time_disp_btn" />
+						<lv_label bind_text="time_half" align="center" />
+					</lv_button>
+
+					<!-- Set PM -->
+					<lv_button style_pad_all="0">
+						<lv_image src="image_down_arrow" />
+						<subject_set_string_event subject="time_half" value="PM" />
+					</lv_button>
+				</column>
+			</row>
+			<!-- End of time adjustment row -->
+		</lv_obj>
+		<!-- End of inner container -->
+	</view>
+	<!-- End of root view -->
+</component>

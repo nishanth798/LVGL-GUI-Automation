@@ -1,0 +1,74 @@
+<component>
+	<!-- ======= PREVIEW SECTION ======= -->
+	<!-- Controls how the component looks inside LVGL Pro’s editor canvas -->
+	<previews>
+		<preview height="480" width="480" />
+	</previews>
+
+	<!-- ======= API SECTION ======= -->
+	<!-- Defines public properties that can be customized by the parent screen -->
+	<api>
+		<!-- "text" is the left-side label, e.g., “Start Time” or “End Time” -->
+		<prop name="text" type="string" default="Start time" />
+
+		<!-- "time" is the current time string displayed in the grey box -->
+		<prop name="time" type="string" default="9:00 PM" />
+	</api>
+
+	<!-- ======= STYLES SECTION ======= -->
+	<!-- Styles define visual appearance of container and child objects -->
+	<styles>
+		<!-- Outer container for the full row -->
+		<style name="cont_set_timer" width="415" height="content" pad_all="0" border_width="0" pad_row="2" />
+
+		<!-- Style for the grey time display box -->
+		<style name="timer" bg_color="0xf6f6f6" width="234" height="48" radius="5" pad_hor="18" pad_ver="15" />
+
+		<!-- Style for the “Change” button on the right -->
+		<style
+			name="cont_change"
+			bg_color="0xffffff"
+			border_color="0x1a1040"
+			border_opa="255"
+			border_width="3"
+			width="171"
+			height="48"
+			radius="5"
+			shadow_width="4"
+			shadow_color="0x000000"
+			shadow_opa="64"
+			shadow_offset_x="0"
+			shadow_offset_y="2"
+			pad_hor="25"
+			pad_ver="10"
+		/>
+	</styles>
+
+	<!-- ======= VIEW SECTION ======= -->
+
+	<view extends="lv_obj" flex_flow="row_wrap" scrollable="false">
+		<!-- Apply base container style -->
+		<style name="cont_set_timer" />
+
+		<lv_obj width="415" height="content" style_pad_all="0" style_border_width="0">
+			<!-- Displays the text property, e.g., “Start Time” -->
+			<lv_label text="$text" />
+		</lv_obj>
+
+		<lv_obj scrollable="false">
+			<!-- Apply grey background style -->
+			<style name="timer" />
+			<!-- Bind to the $time property -->
+			<lv_label text="$time" />
+		</lv_obj>
+
+		<lv_obj scrollable="false" clickable="true">
+			<!-- Apply outlined button style -->
+			<style name="cont_change" />
+			<!-- Centered “Change” label -->
+			<lv_label text="Change" align="center" />
+			<!-- Event: creates and opens the screen for adjusting time -->
+			<screen_create_event screen="screen_set_time" />
+		</lv_obj>
+	</view>
+</component>
